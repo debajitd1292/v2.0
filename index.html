@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PPU OPERATIONS DASHBOARD</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#0d47a1">
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="header">
+    <img src="https://raw.githubusercontent.com/debajitd1292/ppu/main/logo.png" 
+     class="logo" 
+     onload="this.style.opacity=1; this.style.transform='scale(1)'"> 
+
+    <h3>PPU OPERATIONS DASHBOARD</h3> 
+    <div id="todayDate"></div> 
+
+    <div id="todayNote" style="margin-top:5px;font-weight:bold;"></div> 
+
+    <div class="badge" id="todayShiftBadge">Loading...</div> 
+
+    <div class="holiday-text"> 
+        Next GH: <span id="nextGH"></span> • 
+        Next RH: <span id="nextRH"></span> 
+    </div> 
+
+    <div id="themeToggle" class="theme-switch">
+        <input type="checkbox" id="toggleCheckbox">
+        <span class="slider"></span>
+    </div>
+
+</div>
+
+<div class="info-bar">
+
+    <div class="info-row">
+        <span class="info-label">Head of Department</span>
+        <span class="info-name">Sh. Pradeep Rawat</span>
+    </div>
+
+    <div class="info-row">
+        <span class="info-label">Area In-charge</span>
+        <span class="info-name">Sh. Manoj Kumar Haloi</span>
+    </div>
+
+    <div class="info-row">
+        <span class="info-label">Shift In-charge (Current)</span>
+        <span class="info-name" id="presentShiftIncharge">—</span>
+    </div>
+
+</div>
+
+<div id="alertSection" style="margin:10px;"></div>
+
+<div class="card">
+
+    <div class="row">
+    <div class="field">
+        <label>Select Category:</label>
+        <select id="categorySelector" onchange="onCategoryChange()">
+            <option value="" disabled selected>Select Category</option>
+            <option value="exec">Executive</option>
+            <option value="nonexec">Non-Executive</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <label>Select Name:</label>
+        <select id="nameSelector" onchange="onNameChange()"></select>
+    </div>
+</div>
+
+</div>
+
+<div class="card">
+
+    <h3 id="todayTitle">Today's Shift</h3>
+    <div id="today"></div>
+</div>
+
+<div class="card"> 
+
+    <h3 id="selectedTitle">Select Date & View Shift</h3> 
+
+    <label>Select Date:</label> 
+    <input type="date" id="datePicker" onchange="renderSelected()"> 
+    <div id="selected" style="margin-top:10px;"></div> 
+
+</div>
+
+<div class="card">
+    <h3>Upcoming Shifts (Next 7 Days)</h3>
+    <div id="next7Days" class="next7-container"></div>
+</div>
+
+<div class="info-card production-card">
+
+    <h3 id="productionPlanHeader">Production Plan for <span id="productionPlanMonth">—</span></h3>
+
+    <div id="productionTargets" class="production-targets">
+    </div>
+
+    <div id="productionEmpty" class="production-empty">
+    Production plan not received yet
+</div>
+
+<div class="production-table-wrap" id="productionTableWrap">
+
+    <table class="production-table">
+
+        <thead>
+            <tr>
+                <th>Duration</th>
+                <th>Days</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+
+        <tbody id="productionPlanBody">
+        </tbody>
+
+    </table>
+
+</div>
+
+</div>
+
+<div class="card">
+    <h3 id="trainingHeader">Training Schedule</h3>
+    <div id="trainingSection">Loading...</div>
+</div>
+
+<div class="footer">
+    <div id="lastUpdated" style="margin-bottom:6px;"></div>
+    © 2026 • Developed by DebajitD
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/alerts.js"></script>
+<script src="js/production.js"></script>
+<script src="js/holiday.js"></script>
+<script src="js/notes.js"></script>
+<script src="js/training.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/status.js"></script>
+<script src="js/selection.js"></script>
+<script src="js/shift-data.js"></script>
+<script src="js/views.js"></script>
+<script src="js/loader.js"></script>
+<script src="js/pwa.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
