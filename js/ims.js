@@ -14,11 +14,11 @@ function loadIMSData(csvText) {
         return;
     }
 
-    imsHeaders = rows[0].map(value => String(value || "").trim());
+    imsHeaders = rows[0].map(v => String(v || "").trim());
 
     imsRows = rows.slice(1)
-        .filter(row => row.some(value => String(value || "").trim() !== ""))
-        .map(row => row.map(value => String(value ?? "").trim()));
+        .filter(row => row.some(v => String(v || "").trim() !== ""))
+        .map(row => row.map(v => String(v ?? "").trim()));
 
     renderIMSTargets();
 }
@@ -35,39 +35,48 @@ function renderIMSTargets() {
         return;
     }
 
-    const normalise = value =>
-        String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
-
-    const targetIndex = imsHeaders.findIndex(header =>
-        normalise(header).includes("target") &&
-        !normalise(header).includes("achieved")
+    const objectiveIndex = imsHeaders.findIndex(
+        h => h.trim().toLowerCase() === "objective"
     );
 
-    const tillDateIndex = imsHeaders.findIndex(header => {
-        const h = normalise(header);
-        return h.includes("targetachieved") ||
-               h === "tilldate" ||
-               h === "tilldatevalue";
+    const targetIndex = imsHeaders.findIndex(
+        h => h.trim().toLowerCase() === "target"
+    );
+
+    const tillDateIndex = imsHeaders.findIndex(
+        h => h.trim().toLowerCase() === "till date"
+    );
+
+    const monthMap = {
+        jan: "January",
+        feb: "February",
+        mar: "March",
+        apr: "April",
+        may: "May",
+        jun: "June",
+        jul: "July",
+        aug: "August",
+        sep: "September",
+        oct: "October",
+        nov: "November",
+        dec: "December"
+    };
+
+    const monthColumns = [];
+
+    imsHeaders.forEach((header, index) => {
+        const match = header.match(
+            /^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-(\d{4})$/i
+        );
+
+        if (match) {
+            monthColumns.push({
+                index: index,
+                month: match[1].toLowerCase(),
+                year: match[2]
+            });
+        }
     });
-
-    const monthNames = [
-        "january", "february", "march", "april",
-        "may", "june", "july", "august",
-        "september", "october", "november", "december"
-    ];
-
-    const monthColumns = imsHeaders.map((header, index) => {
-        const h = normalise(header);
-        const monthIndex = monthNames.findIndex(month => h.includes(month));
-
-        if (monthIndex < 0) return null;
-
-        return {
-            index,
-            monthIndex,
-            year: (header.match(/20\d{2}/) || [])[0] || ""
-        };
-    }).filter(Boolean);
 
     let latestMonth = null;
 
@@ -89,34 +98,51 @@ function renderIMSTargets() {
 
     title.textContent =
         "IMS Targets Achieved Till " +
-        monthNames[latestMonth.monthIndex].replace(/^./, c => c.toUpperCase()) +
-        " " + (latestMonth.year || new Date().getFullYear());
+        monthMap[latestMonth.month] + " " +
+        latestMonth.year;
 
-    const objectives = [
-        "Production Target",
-        "Specific Energy Consumption",
-        "Specific Monomer Consumption",
-        "Prime Generation",
-        "Plant Downtime due to Process Reason",
-        "Training Manhours",
-        "Near Miss Reporting"
-    ];
+    const displayNames = {
+        "productiontarget": "Production Target",
+        "specificenergyconsumption": "Specific Energy Consumption",
+        "specificmonomerconsumption": "Specific Monomer Consumption",
+        "primegenenration": "Prime Generation",
+        "primegeneration": "Prime Generation",
+        "downtime due to process reasons": "Plant Downtime due to Process Reason",
+        "plantdowntime due to process reason": "Plant Downtime due to Process Reason",
+        "trainingmanhours": "Training Manhours",
+        "nearmissreporting": "Near Miss Reporting"
+    };
+
+    const normalise = value =>
+        String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+    const headingAliases = {
+        [normalise("Production Target")]: "Production Target",
+        [normalise("Specific Energy Consumption")]: "Specific Energy Consumption",
+        [normalise("Specific Monomer Consumption")]: "Specific Monomer Consumption",
+        [normalise("Prime Genenration")]: "Prime Generation",
+        [normalise("Prime Generation")]: "Prime Generation",
+        [normalise("Downtime due to Process Reasons")]: "Plant Downtime due to Process Reason",
+        [normalise("Plant Downtime due to Process Reason")]: "Plant Downtime due to Process Reason",
+        [normalise("Training Manhours")]: "Training Manhours",
+        [normalise("Near Miss Reporting")]: "Near Miss Reporting"
+    };
 
     container.innerHTML = "";
 
-    objectives.forEach(objective => {
-        const row = imsRows.find(r =>
-            normalise(r[0]) === normalise(objective)
-        );
-
-        if (!row) return;
+    imsRows.forEach(row => {
+        const sourceName = row[objectiveIndex >= 0 ? objectiveIndex : 0];
+        const headingText =
+            headingAliases[normalise(sourceName)] ||
+            displayNames[normalise(sourceName)] ||
+            sourceName;
 
         const section = document.createElement("div");
         section.className = "ims-section";
 
         const heading = document.createElement("h4");
         heading.className = "ims-section-title";
-        heading.textContent = row[0] || objective;
+        heading.textContent = headingText;
 
         const values = document.createElement("div");
         values.className = "ims-values";
@@ -141,7 +167,7 @@ function renderIMSTargets() {
         addValue("Target", targetIndex >= 0 ? row[targetIndex] : "");
         addValue(
             "Last month",
-            latestMonth.index >= 0 ? row[latestMonth.index] : ""
+            latestMonth ? row[latestMonth.index] : ""
         );
         addValue(
             "Till date",
