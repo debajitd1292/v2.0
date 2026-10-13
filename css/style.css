@@ -1382,3 +1382,82 @@ body.dark #productionPlanMonth {
     }
 }
 
+/* ===== SETTINGS / DISPLAY OPTIONS ===== */
+.settings-card > h3 {
+    margin: 4px 0 16px;
+    text-align: center;
+}
+
+.settings-card > label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.settings-card #displayMode {
+    margin-top: 0;
+}
+
+.settings-details {
+    margin-top: 18px;
+}
+
+.settings-details h4 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.settings-details p {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.4;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.settings-details p span:first-child {
+    flex-shrink: 0;
+    color: #6b7280;
+}
+
+.settings-details p span:last-child {
+    text-align: right;
+    overflow-wrap: anywhere;
+    font-weight: 400;
+}
+
+body.dark .settings-details p {
+    border-bottom-color: #343943;
+}
+
+body.dark .settings-details p span:first-child {
+    color: #9ca3af;
+}
+
+/* Keep six tabs in one row on most mobile screens */
+@media (max-width: 380px) {
+    .bottom-nav .nav-item {
+        font-size: 8px;
+        gap: 2px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .bottom-nav .nav-item svg {
+        width: 17px;
+        height: 17px;
+    }
+}
+
+/* Two rows only on exceptionally narrow screens */
+@media (max-width: 300px) {
+    .bottom-nav {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+}
