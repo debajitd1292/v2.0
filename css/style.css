@@ -1649,3 +1649,24 @@ body:not(.dark) #page-ims .ims-card > h3 {
     margin: 0 0 14px;
 }
 
+
+/* Match Shift section headings with other dashboard sections */
+#page-shifts #shiftCalendarHeading,
+#page-shifts #selectedTitle {
+    background: linear-gradient(135deg, #0f172a, #020617);
+    color: #e2e8f0;
+    padding: 12px 14px;
+    margin: 0 0 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-sizing: border-box;
+}
+
+/* Light mode: retain the blue heading design */
+body:not(.dark) #page-shifts #shiftCalendarHeading,
+body:not(.dark) #page-shifts #selectedTitle {
+    background: linear-gradient(135deg, #1f4e79, #163a5f);
+    color: #ffffff;
+    border-color: rgba(31, 78, 121, 0.25);
+}
+
