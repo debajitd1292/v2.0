@@ -181,7 +181,6 @@ h1 {
 }
 
 /* ==================== 05. ALERTS ==================== */
-/* ===== Premium Alert Section ===== */
 
 #alertSection {
     margin: 10px;
@@ -225,7 +224,7 @@ h1 {
 }
 
 /* ==================== 15. ANIMATIONS ==================== */
-@keyframes fadeIn@keyframes fadeIn {
+@keyframes fadeIn {
     from {
         opacity: 0;
         transform: translateY(-4px);
@@ -283,7 +282,7 @@ select:focus, input:focus {
 /* ===== Mobile Optimization ===== */
 
 /* ==================== 14. RESPONSIVE DESIGN ==================== */
-@media (max-width: 600px)@media (max-width: 600px) {
+@media (max-width: 600px) {
     .row {
         flex-direction: row;
     }
@@ -622,7 +621,6 @@ body.dark .calendar-today .calendar-date {
     }
 }
 
-
 /* ==================== 10. TRAINING ==================== */
 .training-item {
     background: linear-gradient(135deg, #ffffff, #f1f5f9);
@@ -684,10 +682,7 @@ body.dark .upcoming-training {
 }
 
 /* ==================== 11. THEME TOGGLE ==================== */
-/* =========================
-   THEME TOGGLE SWITCH/* =========================
-   THEME TOGGLE SWITCH
-========================= */
+/* Theme toggle switch */
 .theme-switch {
     position:absolute;
     top:12px;
@@ -740,10 +735,7 @@ body.dark .upcoming-training {
 }
 
 /* ==================== 12. DARK MODE OVERRIDES ==================== */
-/* =========================
-   DARK MODE/* =========================
-   DARK MODE
-========================= */
+/* Dark mode overrides */
 body.dark .training-item {
     background: linear-gradient(135deg, #1e293b, #111827);
     border-left: 5px solid #60a5fa;
@@ -851,10 +843,7 @@ body.dark .badge {
 }
 
 /* ==================== 13. PRODUCTION PLAN ==================== */
-/* =========================
-   PRODUCTION PLAN/* =========================
-   PRODUCTION PLAN
-   ========================= */
+/* Production plan */
 
 .production-card{
     margin-top:18px;
@@ -968,7 +957,6 @@ body.dark .badge {
     width:90px;
 }
 
-
 /* Today's production */
 .production-today td{
     background:linear-gradient(135deg,#ecfdf5,#d1fae5);
@@ -994,7 +982,6 @@ body.dark .production-past{
     font-weight:600;
     color:#777;
 }
-
 
 /* Dark mode */
 body.dark .production-card{
@@ -1092,7 +1079,6 @@ input[type="date"] {
     max-width: 100%;
     box-sizing: border-box;
 }
-
 
 /* ===== APP PAGE NAVIGATION ===== */
 
@@ -1215,7 +1201,6 @@ body.dark .more-menu button {
   }
 }
 
-
 /* ===== IMS TARGETS PAGE ===== */
 
 .ims-card > h3 {
@@ -1280,7 +1265,6 @@ body.dark .ims-section {
     font-size: 11px;
   }
 }
-
 
 /* ===== IMS TARGETS: MODERN CARD DESIGN ===== */
 
@@ -1411,8 +1395,6 @@ body.dark .ims-value-number {
 }
 
 
-/* ===== MATCHING PRODUCTION & TRAINING HEADERS ===== */
-
 #trainingHeader,
 #productionPlanHeader {
     margin: 8px 0 16px;
@@ -1427,7 +1409,7 @@ body.dark .ims-value-number {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
 }
 
-/* Keep the production month text consistent with the header */
+
 #productionPlanMonth {
     color: #ffffff;
     font-weight: 700;
@@ -1453,7 +1435,6 @@ body.dark #productionPlanMonth {
         font-size: 15px;
     }
 }
-
 
 /* ===== SIX-TAB BOTTOM NAVIGATION ===== */
 
@@ -1568,7 +1549,6 @@ body.dark .settings-details p span:first-child {
     }
 }
 
-/* ===== SETTINGS HEADER — MATCH IMS DESIGN ===== */
 #settingsHeader {
     margin: 8px 0 16px;
     padding: 14px 12px;
@@ -1595,9 +1575,6 @@ body.dark #settingsHeader {
     }
 }
 
-
-
-/* Match section headers to HOD/AIC colours in dark mode */
 body.dark #page-production .production-card > h3,
 body.dark #page-training .card > h3,
 body.dark #page-ims .ims-card > h3,
@@ -1612,7 +1589,6 @@ body.dark #page-others .settings-card > h3 {
 }
 
 
-/* Match IMS heading spacing with Training in dark mode */
 body.dark #page-ims .ims-card {
     padding: 17px 12px 14px;
 }
@@ -1622,8 +1598,6 @@ body.dark #page-ims .ims-card > h3 {
     border-radius: 10px;
 }
 
-
-/* Match IMS heading spacing in light mode */
 body:not(.dark) #page-ims .ims-card {
     padding: 17px 12px 14px;
 }
@@ -1634,7 +1608,6 @@ body:not(.dark) #page-ims .ims-card > h3 {
 }
 
 
-/* IMS outer card background in light mode */
 body:not(.dark) #page-ims .ims-card {
     background: #ffffff;
     border-radius: 14px;
@@ -1643,14 +1616,12 @@ body:not(.dark) #page-ims .ims-card {
     overflow: hidden;
 }
 
-/* Keep the IMS heading rounded on all four corners */
+
 body:not(.dark) #page-ims .ims-card > h3 {
     border-radius: 10px;
     margin: 0 0 14px;
 }
 
-
-/* Match Shift section headings with other dashboard sections */
 #page-shifts #shiftCalendarHeading,
 #page-shifts #selectedTitle {
     background: linear-gradient(135deg, #0f172a, #020617);
@@ -1662,11 +1633,10 @@ body:not(.dark) #page-ims .ims-card > h3 {
     box-sizing: border-box;
 }
 
-/* Light mode: retain the blue heading design */
+
 body:not(.dark) #page-shifts #shiftCalendarHeading,
 body:not(.dark) #page-shifts #selectedTitle {
     background: linear-gradient(135deg, #1f4e79, #163a5f);
     color: #ffffff;
     border-color: rgba(31, 78, 121, 0.25);
 }
-
