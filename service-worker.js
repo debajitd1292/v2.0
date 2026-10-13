@@ -5,7 +5,7 @@ const urlsToCache = [
     "./index.html?v=25",
     "./manifest.json",
     "./service-worker.js",
-    "https://raw.githubusercontent.com/debajitd1292/ppu/main/logo.png"
+    "https://raw.githubusercontent.com/debajitd1292/v2.0/main/logo.png"
 ];
 
 
