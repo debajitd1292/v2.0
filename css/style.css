@@ -1611,13 +1611,13 @@ body.dark #page-others .settings-card > h3 {
     box-sizing: border-box;
 }
 
-/* Match IMS card top spacing with Training in dark mode */
+
+/* Match IMS heading spacing with Training in dark mode */
 body.dark #page-ims .ims-card {
-    padding-top: 20px;
+    padding: 17px 12px 14px;
 }
 
 body.dark #page-ims .ims-card > h3 {
-    margin-top: 0;
-    margin-bottom: 14px;
+    margin: 0 0 14px;
     border-radius: 10px;
 }
