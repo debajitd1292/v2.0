@@ -1175,3 +1175,132 @@ body.dark .ims-section {
   }
 }
 
+
+/* ===== IMS TARGETS: MODERN CARD DESIGN ===== */
+
+.ims-card {
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+}
+
+.ims-card > h3 {
+    margin: 8px 0 16px;
+    padding: 14px 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #1f4e79, #2563a6);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+.ims-section {
+    background: linear-gradient(135deg, #ffffff, #f1f5f9);
+    border-left: 5px solid #1f4e79;
+    border-radius: 10px;
+    padding: 13px 12px;
+    margin-bottom: 12px;
+    border-bottom: none;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ims-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.ims-section-title {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.45;
+    color: #1f4e79;
+}
+
+.ims-values {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.ims-value {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 8px 6px;
+    border-radius: 7px;
+    background: rgba(148, 163, 184, 0.10);
+}
+
+.ims-value-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: #64748b;
+}
+
+.ims-value-number {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #1e293b;
+    overflow-wrap: anywhere;
+}
+
+/* Dark mode */
+body.dark .ims-card > h3 {
+    background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
+}
+
+body.dark .ims-section {
+    background: linear-gradient(135deg, #1e293b, #111827);
+    border-left-color: #60a5fa;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+body.dark .ims-section-title {
+    color: #93c5fd;
+}
+
+body.dark .ims-value {
+    background: rgba(148, 163, 184, 0.10);
+}
+
+body.dark .ims-value-label {
+    color: #94a3b8;
+}
+
+body.dark .ims-value-number {
+    color: #e2e8f0;
+}
+
+/* Compact mobile layout */
+@media (max-width: 360px) {
+    .ims-section {
+        padding: 11px 9px;
+    }
+
+    .ims-section-title {
+        font-size: 13px;
+    }
+
+    .ims-values {
+        gap: 5px;
+    }
+
+    .ims-value {
+        padding: 7px 4px;
+    }
+
+    .ims-value-label {
+        font-size: 9px;
+    }
+
+    .ims-value-number {
+        font-size: 11px;
+    }
+}
+
