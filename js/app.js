@@ -472,6 +472,10 @@ function navigateToPage(page, addHistory = true) {
         return;
     }
 
+    if (page !== "more") {
+        localStorage.setItem("lastDashboardPage", page);
+    }
+
     const targetPage = document.getElementById("page-" + page);
 
     if (!targetPage) {
@@ -479,12 +483,10 @@ function navigateToPage(page, addHistory = true) {
         return;
     }
 
-    // Show the selected page and hide the others
     document.querySelectorAll(".app-page").forEach(function (section) {
         section.classList.toggle("active", section === targetPage);
     });
 
-    // Highlight the selected bottom navigation tab
     const activeTab = page;
 
     document.querySelectorAll(".bottom-nav .nav-item").forEach(function (item) {
@@ -499,7 +501,6 @@ function navigateToPage(page, addHistory = true) {
         }
     });
 
-    // Keep the page name in browser history for Back-button handling
     if (addHistory) {
         history.pushState(
             { dashboardPage: page },
@@ -508,19 +509,32 @@ function navigateToPage(page, addHistory = true) {
         );
     }
 
-    // Start each page at the top
     window.scrollTo(0, 0);
 }
 
-// Android/browser Back button returns to Home
 window.addEventListener("popstate", function () {
     navigateToPage("home", false);
     history.replaceState({ dashboardPage: "home" }, "", "#home");
 });
 
-// Initialise navigation on first load
 document.addEventListener("DOMContentLoaded", function () {
-    navigateToPage("home", false);
-    history.replaceState({ dashboardPage: "home" }, "", "#home");
+    const validPages = [
+        "home",
+        "shifts",
+        "production",
+        "training",
+        "ims",
+        "others"
+    ];
+
+    const savedPage = localStorage.getItem("lastDashboardPage");
+    const initialPage = validPages.includes(savedPage) ? savedPage : "home";
+
+    navigateToPage(initialPage, false);
+    history.replaceState(
+        { dashboardPage: initialPage },
+        "",
+        "#" + initialPage
+    );
 });
 
