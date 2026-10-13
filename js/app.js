@@ -485,7 +485,7 @@ function navigateToPage(page, addHistory = true) {
     });
 
     // Highlight the selected bottom navigation tab
-    const activeTab = ["ims", "others"].includes(page) ? "more" : page;
+    const activeTab = page;
 
     document.querySelectorAll(".bottom-nav .nav-item").forEach(function (item) {
         const isActive = item.dataset.page === activeTab;
