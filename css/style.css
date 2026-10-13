@@ -1610,3 +1610,10 @@ body.dark #page-others .settings-card > h3 {
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-sizing: border-box;
 }
+
+/* Align IMS heading spacing with the other dark-mode sections */
+body.dark #page-ims .ims-card > h3 {
+    margin-top: 0;
+    margin-bottom: 14px;
+    border-radius: 10px;
+}
