@@ -1304,3 +1304,47 @@ body.dark .ims-value-number {
     }
 }
 
+
+/* ===== MATCHING PRODUCTION & TRAINING HEADERS ===== */
+
+#trainingHeader,
+#productionPlanHeader {
+    margin: 8px 0 16px;
+    padding: 14px 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    background: linear-gradient(135deg, #1f4e79, #2563a6);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* Keep the production month text consistent with the header */
+#productionPlanMonth {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+/* Dark mode */
+body.dark #trainingHeader,
+body.dark #productionPlanHeader {
+    background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+body.dark #productionPlanMonth {
+    color: #ffffff;
+}
+
+/* Smaller phones */
+@media (max-width: 360px) {
+    #trainingHeader,
+    #productionPlanHeader {
+        padding: 12px 9px;
+        font-size: 15px;
+    }
+}
+
