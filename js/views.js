@@ -1,1596 +1,238 @@
-/*
-===============================================================================
-PPU OPERATIONS DASHBOARD — CSS INDEX
-===============================================================================
+// ===============================
+// DATE & UPCOMING SHIFT VIEWS
+// ===============================
 
-01. GLOBAL & BASE                  — body, h1
-02. HEADER & LOGO                  — .header, #todayDate, .logo, .badge
-03. HOD / AREA IN-CHARGE            — .info-bar, .info-row, .info-label, .info-name
-04. LAYOUT & FORM CONTROLS          — .row, .field, input, select
-05. ALERTS                          — #alertSection, .notice-alert, .alert-item
-06. EXECUTIVE / NON-EXEC HEADERS  — .section-header, .exec-header, .nonexec-header
-07. SHIFT DISPLAY & COLORS         — .card, .chip, .A, .B, .C, .G, .OFF, etc.
-08. FOOTER & LAST UPDATED           — .footer, #lastUpdated
-09. NEXT 7 DAYS                     — .next7-container, .day-card, .day-date, .day-shift
-10. TRAINING                        — .training-item, .training-name, .training-type
-11. THEME TOGGLE                    — .theme-switch, .slider
-12. DARK MODE OVERRIDES             — selectors beginning with body.dark
-13. PRODUCTION PLAN                 — .production-card, .production-target, .production-table
-14. RESPONSIVE DESIGN                — @media rules
-15. ANIMATIONS                       — @keyframes
+async function renderSelected(){
 
-===============================================================================
-*/
+    let val = document.getElementById("datePicker").value;
 
-/* ==================== 01. GLOBAL & BASE ==================== */
-body { 
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-    font-family: 'Inter', sans-serif;
-    font-variant-numeric: tabular-nums;
-    margin: 0; 
-    background: #eef1f5; 
-    overflow-x: hidden;
-}
+    if(!val) return;
 
-/* ==================== 02. HEADER & LOGO ==================== */
-.header {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    let d = new Date(val);
 
-    padding: 18px 12px;
+    let formatted = d.toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric"
+    });
 
-    /* Premium gradient */
-    background: linear-gradient(135deg, #0f172a, #1e3a8a);
+    let renderDate = formatDate(d);
 
-    /* Glass effect */
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    document.getElementById("selectedTitle").innerText =
+        "Selected Date Shift (" + formatted + ")";
 
-    /* Subtle border */
-    border-bottom: 1px solid rgba(255,255,255,0.1);
 
-    /* Depth shadow */
-    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    /* =========================================
+       CHECK WHETHER SELECTED DATE IS ALREADY
+       LOADED
+       ========================================= */
 
-    text-align: center;
-    color: #e2e8f0;
+    if(header.indexOf(renderDate) === -1){
 
-    overflow-x: hidden;
-}
+        const month =
+            String(d.getMonth() + 1).padStart(2, "0");
 
-#todayDate {
-    font-size: 15px;
-    font-weight: 500;
-    opacity: 0.9;
-    margin-bottom: 4px;
-}
+        const year =
+            String(d.getFullYear()).slice(-2);
 
-.header h3 {
-    margin: 6px 0 4px;
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+        const monthKey =
+            month + year;
 
-    /* subtle glow */
-    text-shadow: 0 0 8px rgba(255,255,255,0.15);
-}
 
-h1 {
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    letter-spacing: 0.8px;
-}
+        /* =========================================
+           LOAD SELECTED MONTH
+           ========================================= */
 
-.holiday-text {
-    font-size: 12px;
-}
+        const selectedExecUrl =
+            baseUrl +
+            "exec/shift_exec_" +
+            monthKey +
+            ".csv?v=" +
+            Date.now();
 
-.day-name {
-    font-size: 11px;
-    font-weight: 600;
-    color: #888;
-    margin-bottom: 2px;
-    text-align: center;
-}
+        const selectedNonExecUrl =
+            baseUrl +
+            "nonexec/shift_nonexec_" +
+            monthKey +
+            ".csv?v=" +
+            Date.now();
 
-.logo { 
-    width:60px; 
-    height:60px; 
-    border-radius:50%;
-    object-fit:cover;
 
-    box-shadow:0 2px 8px rgba(0,0,0,0.3);
+        try{
 
-    background:transparent;
-    padding:0;
+            const [
+                selectedExecText,
+                selectedNonExecText
+            ] = await Promise.all([
 
-    opacity:0;                      
-    transform:scale(0.8);           
-    transition:all 0.4s ease;       
-}
+                fetchCSV(
+                    selectedExecUrl,
+                    false
+                ),
 
-.badge {
-    display:inline-block;
-    padding:6px 14px;
-    border-radius:20px;
-    margin:8px 0;
-    font-weight:bold;
-    font-size:14px;
+                fetchCSV(
+                    selectedNonExecUrl,
+                    true
+                )
 
-    background: linear-gradient(135deg, #2563eb, #1e40af);
+            ]);
 
-    box-shadow: 
-        0 2px 6px rgba(0,0,0,0.3),
-        inset 0 1px 2px rgba(255,255,255,0.2);
 
-    border: 1px solid rgba(255,255,255,0.15);
-}
+            /* =====================================
+               MERGE SELECTED MONTH WITH
+               ALREADY LOADED DATA
+               ===================================== */
 
-/* ==================== 03. HOD / AREA IN-CHARGE ==================== */
-.info-bar {
-    background: linear-gradient(135deg, #1f4e79, #163a5f);
-    color: white;
-    margin: 10px;
-    padding: 10px 14px;
-    border-radius: 12px;
+            const selectedExecData =
+                parseCSV(selectedExecText);
 
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+            if(
+                selectedExecData &&
+                selectedExecData.length
+            ){
 
-    box-shadow:
-        0 3px 10px rgba(0,0,0,0.18),
-        inset 0 1px 1px rgba(255,255,255,0.08);
-}
+                data = mergeShiftData(
+                    selectedExecData,
+                    data
+                );
 
-.info-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+                header =
+                    data[0]?.map(x => x.trim()) || [];
+            }
 
-    min-height: 25px;
-    padding: 1px 2px;
-}
 
-.info-label {
-    font-size: 13px;
-    font-weight: 700;
-    opacity: 0.9;
-    white-space: nowrap;
-}
+            const selectedNonExecData =
+                parseCSV(selectedNonExecText);
 
-.info-name {
-    font-size: 13px;
-    font-weight: 500;
-    text-align: right;
-    white-space: nowrap;
-}
+            if(
+                selectedNonExecData &&
+                selectedNonExecData.length
+            ){
 
-/* ==================== 04. LAYOUT & FORM CONTROLS ==================== */
-.row {
-    display: flex;
-    gap: 10px;
-}
+                nonExecData = mergeShiftData(
+                    selectedNonExecData,
+                    nonExecData
+                );
 
-.field {
-    flex: 1;
-    min-width: 0;   /* prevents overflow on mobile */
-}
+                nonExecHeader =
+                    nonExecData[0]?.map(x => x.trim()) || [];
+            }
 
-/* ==================== 05. ALERTS ==================== */
-/* ===== Premium Alert Section ===== */
+        }catch(err){
 
-#alertSection {
-    margin: 10px;
-    animation: fadeIn 0.3s ease;
-}
+            console.warn(
+                "Selected month schedule not available:",
+                monthKey,
+                err
+            );
 
-/* Thin accent on left */
-.notice-alert::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: #d99a24;
-    border-radius: 12px 0 0 12px;
-}
+        }
 
-/* Individual alert */
-.alert-item {
-    position: relative;
-    margin-bottom: 0;
-
-    color: #4a3a20;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 1.3;
-}
-
-.alert-item + .alert-item {
-    margin-top: 6px;
-    padding-top: 0;
-}
-
-.alert-item:last-child {
-    margin-bottom: 0;
-}
-
-#alertSection:empty {
-    display: none;
-}
-
-/* ==================== 15. ANIMATIONS ==================== */
-@keyframes fadeIn@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-4px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-input, select {
-    width: 100%;
-    height: 40px;
-    padding: 6px 10px;
-    margin-top: 6px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-}
-
-select:focus, input:focus {
-    outline: none;
-    border: 2px solid gold;
-}
-
-.shift-active-box {
-    position: relative;
-    padding: 5px;
-    border-radius: 10px;
-}
-
-.shift-active-box::before {
-    content: "";
-    position: absolute;
-
-    top: -0px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-
-    border-radius: 12px;
-
-    background: linear-gradient(90deg, transparent, #0d47a1, transparent);
-    background-size: 200% 100%;
-    animation: moveBorder 2s linear infinite;
-
-    z-index: 0;
-}
-
-.shift-active-box > * {
-    position: relative;
-    z-index: 1;
-}
-
-/* ===== Mobile Optimization ===== */
-
-/* ==================== 14. RESPONSIVE DESIGN ==================== */
-@media (max-width: 600px)@media (max-width: 600px) {
-    .row {
-        flex-direction: row;
     }
 
-    select, input {
-        font-size: 14px;
-    }
+
+    /* =========================================
+       RENDER SELECTED DATE
+       ========================================= */
+
+    render("selected", renderDate);
 }
 
-@media (max-width: 400px) {
-    .row {
-        flex-direction: column;
-    }
-}
 
-/* ==================== 06. EXECUTIVE / NON-EXECUTIVE HEADERS ==================== */
-.section-header {
-    display: inline-block;
-    padding: 6px 14px;
-    margin: 12px 0 8px 0;
 
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+function renderNext7Days(){
 
-    border-radius: 999px; /* pill shape */
+    const box = document.getElementById("next7Days");
 
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    if(!box) return;
 
-    border: 1px solid rgba(255,255,255,0.2);
+    if(!header || header.length === 0 || !data || data.length === 0){
 
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
+        box.innerHTML =
+            "<div style='color:#777;font-weight:bold;'>Shift schedule is not available</div>";
 
-.exec-header {
-    color: #0d47a1;
-    background: linear-gradient(135deg, rgba(13,71,161,0.15), rgba(13,71,161,0.05));
-    border: 1px solid rgba(13,71,161,0.3);
-}
-
-.nonexec-header {
-    color: #b71c1c;
-    background: linear-gradient(135deg, rgba(183,28,28,0.15), rgba(183,28,28,0.05));
-    border: 1px solid rgba(183,28,28,0.3);
-}
-
-/* ==================== 07. SHIFT DISPLAY & COLORS ==================== */
-.card {
-    background:white;
-    margin:10px;
-    padding:12px;
-    border-radius:12px;
-
-    margin-top:15px;
-}
-
-.shift-title { font-weight:bold; margin-top:10px; }
-
-.chip {
-    display:inline-block;
-    padding:6px 10px;
-    border-radius:20px;
-    margin:4px;
-    color:white;
-    font-size:12px;
-}
-
-.selected { border:2px solid gold; }
-
-/* COLORS */
-.A { 
-    background: linear-gradient(135deg, #9333ea, #6b21a8);
-    box-shadow: 0 2px 6px rgba(147,51,234,0.4);
-}
-
-.B { 
-    background: linear-gradient(135deg, #f59e0b, #b45309);
-    box-shadow: 0 2px 6px rgba(245,158,11,0.4);
-}
-
-.C { 
-    background: linear-gradient(135deg, #2563eb, #1e3a8a);
-    box-shadow: 0 2px 6px rgba(37,99,235,0.4);
-}
-.G { background:#e53935; }
-.OFF { background:#1b5e20; }
-
-.D { background:#43a047; }
-.N { background:#6b7280; color:white; }
-.L { background:#ffd600; color:black; }
-.T { background:#00acc1; color:black; }
-
-/* Badge dynamic colors */
-.badge.A { 
-    background: linear-gradient(135deg, #9333ea, #6b21a8);
-    box-shadow: 0 0 10px rgba(147,51,234,0.5);
-}
-
-.badge.B { 
-    background: linear-gradient(135deg, #f59e0b, #b45309);
-    box-shadow: 0 0 10px rgba(245,158,11,0.5);
-}
-
-.badge.C { 
-    background: linear-gradient(135deg, #2563eb, #1e3a8a);
-    box-shadow: 0 0 10px rgba(37,99,235,0.5);
-}
-.badge.G { background:#e53935; }
-.badge.OFF { background:#1b5e20; }
-
-.badge.D { background:#43a047; }
-.badge.N { background:#6b7280; color:white; }
-
-body.dark .badge.N { background:#9ca3af; color:black; }
-.badge.L { background:#ffd600; color:black; }
-.badge.T { background:#00acc1; color:black; }
-
-.chip.selected {
-    box-shadow: 
-        0 0 8px rgba(255,255,255,0.6),
-        0 0 14px rgba(255,255,255,0.3);
-    transform: scale(1.05);
-}
-
-/* Smooth hover effect */
-.chip {
-    transition: all 0.2s ease;
-}
-
-.chip:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-}
-
-/* ==================== 08. FOOTER & LAST UPDATED ==================== */
-.footer {
-    text-align:center;
-    padding:15px;
-    font-size:12px;
-    color:#555;
-}
-
-#lastUpdated {
-    font-size: 11px;
-    opacity: 0.8;
-}
-
-.NA {
-    background: #9e9e9e;
-    color: white;
-}
-
-.notice-alert {
-    position: relative;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-
-    padding: 10px 14px 10px 16px;
-    margin-bottom: 12px;
-
-    border-radius: 10px;
-
-    font-size: 13px;
-    font-weight: 600;
-    text-align: center;
-
-    color: #b71c1c;
-
-    background: linear-gradient(135deg, #fff5f5, #ffe3e3);
-
-    border: 1px solid rgba(183, 28, 28, 0.25);
-
-    box-shadow:
-        0 4px 10px rgba(183, 28, 28, 0.18),
-        0 0 12px rgba(183, 28, 28, 0.25),
-        0 0 22px rgba(183, 28, 28, 0.15);
-
-    overflow: hidden;
-
-    animation: pulseGlow 2s infinite;
-}
-
-@keyframes pulseGlow {
-    0%   { box-shadow: 0 0 6px rgba(183,28,28,0.15); }
-    50%  { box-shadow: 0 0 14px rgba(183,28,28,0.35); }
-    100% { box-shadow: 0 0 6px rgba(183,28,28,0.15); }
-}
-
-@keyframes blink {
-    0% { opacity:1; }
-    50% { opacity:0; }
-    100% { opacity:1; }
-}
-
-/* ===== FULL MONTH SHIFT CALENDAR ===== */
-
-.next7-container {
-    display: block;
-    padding: 8px 0;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.calendar-month {
-    text-align: center;
-    font-size: 15px;
-    font-weight: 700;
-    margin: 0 0 12px;
-    color: #1f4e79;
-}
-
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 5px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.calendar-weekday {
-    text-align: center;
-    font-size: 11px;
-    font-weight: 700;
-    color: #64748b;
-    padding: 5px 0;
-}
-
-.calendar-empty {
-    min-width: 0;
-}
-
-.calendar-day {
-    min-width: 0;
-    min-height: 57px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 5px;
-    padding: 6px 1px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    background: #f8fafc;
-}
-
-.calendar-date {
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 1.2;
-}
-
-.calendar-shift {
-    min-width: 0;
-    max-width: 100%;
-}
-
-.calendar-shift .day-shift {
-    width: 27px;
-    height: 27px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    color: white;
-    font-weight: 700;
-    font-size: 10px;
-    margin: 0 auto;
-    white-space: nowrap;
-}
-
-.calendar-today {
-    border: 2px solid #2563eb;
-    background: #dbeafe;
-    box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.12);
-}
-
-.calendar-today .calendar-date {
-    color: #1d4ed8;
-}
-
-/* Dark mode */
-body.dark .calendar-month {
-    color: #93c5fd;
-}
-
-body.dark .calendar-weekday {
-    color: #cbd5e1;
-}
-
-body.dark .calendar-day {
-    background: #111827;
-    border-color: #374151;
-}
-
-body.dark .calendar-today {
-    background: #1e3a5f;
-    border: 2px solid #60a5fa;
-}
-
-body.dark .calendar-today .calendar-date {
-    color: #bfdbfe;
-}
-
-/* Compact calendar on small screens */
-@media (max-width: 380px) {
-    .calendar-grid {
-        gap: 3px;
+        return;
     }
 
-    .calendar-day {
-        min-height: 52px;
-        padding: 5px 0;
-        border-radius: 6px;
+    if(!selectedName){
+
+        box.innerHTML =
+            "<div style='color:#777;'>Select name to view upcoming shifts</div>";
+
+        return;
     }
 
-    .calendar-weekday {
-        font-size: 10px;
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const todayDate = today.getDate();
+
+    const firstDay = new Date(year, month, 1);
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Monday-first calendar
+    const startOffset = firstDay.getDay();
+
+    const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    let html = `
+        <div class="calendar-month">
+            ${today.toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric"
+            })}
+        </div>
+
+        <div class="calendar-grid">
+    `;
+
+    // Weekday headings
+    weekdays.forEach(day => {
+        html += `<div class="calendar-weekday">${day}</div>`;
+    });
+
+    // Empty cells before the first day
+    for(let i = 0; i < startOffset; i++){
+        html += `<div class="calendar-empty"></div>`;
     }
 
-    .calendar-date {
-        font-size: 11px;
+    // All dates in the current month
+    for(let day = 1; day <= daysInMonth; day++){
+
+        const d = new Date(year, month, day);
+
+        const dd = String(day).padStart(2, "0");
+        const mm = String(month + 1).padStart(2, "0");
+        const dateStr = `${dd}-${mm}-${year}`;
+
+        const rawShift = getShift(dateStr, selectedName) || "-";
+
+        let shiftClass;
+
+        if(rawShift === "-"){
+            shiftClass = "NA";
+        }else if(rawShift === "OFF"){
+            shiftClass = "OFF";
+        }else{
+            shiftClass = rawShift.match(/[A-Z]/)?.[0] || "";
+        }
+
+        const isToday = day === todayDate;
+
+        html += `
+            <div class="calendar-day ${isToday ? "calendar-today" : ""}">
+                <div class="calendar-date">${day}</div>
+                <div class="calendar-shift">
+                    <span class="day-shift ${shiftClass}">${rawShift}</span>
+                </div>
+            </div>
+        `;
     }
 
-    .calendar-shift .day-shift {
-        width: 24px;
-        height: 24px;
-        font-size: 9px;
-    }
-}
-
-
-/* ==================== 10. TRAINING ==================== */
-.training-item {
-    background: linear-gradient(135deg, #ffffff, #f1f5f9);
-    border-left: 5px solid #1f4e79;
-    padding: 12px 14px;
-    border-radius: 10px;
-    margin-bottom: 12px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-    transition: all 0.25s ease;
-}
-
-.training-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
-}
-
-.training-date {
-    font-weight:bold;
-    color:#1f4e79;
-    font-size:13px;
-}
-
-.training-name {
-    font-size:14px;
-    margin:4px 0;
-}
-
-.training-type {
-    font-size:12px;
-    color:#555;
-}
-
-/* Training Status */
-
-/* Past */
-.past-training {
-    opacity: 0.5;
-}
-
-/* Today */
-.today-training {
-    border-left: 5px solid #22c55e !important;
-    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-}
-
-/* Upcoming */
-.upcoming-training {
-    border-left: 5px solid #f59e0b;
-}
-
-/* Dark Mode Status */
-body.dark .today-training {
-    background: linear-gradient(135deg, #064e3b, #022c22);
-    border-left: 5px solid #22c55e;
-}
-
-body.dark .upcoming-training {
-    border-left: 5px solid #fbbf24;
-}
-
-/* ==================== 11. THEME TOGGLE ==================== */
-/* =========================
-   THEME TOGGLE SWITCH/* =========================
-   THEME TOGGLE SWITCH
-========================= */
-.theme-switch {
-    position:absolute;
-    top:12px;
-    right:25px;
-    width:40px;
-    height:22px;
-    z-index:2000;
-}
-
-.theme-switch input {
-    opacity:0;
-    width:100%;
-    height:100%;
-    position:absolute;
-    top:0;
-    left:0;
-    cursor:pointer;
-    z-index:2;
-}
-
-.slider {
-    position:absolute;
-    cursor:pointer;
-    width:100%;
-    height:100%;
-    background:rgba(255,255,255,0.2);
-    border-radius:30px;
-    transition:0.3s;
-}
-
-.slider::before {
-    content:"";
-    position:absolute;
-    height:16px;
-    width:16px;
-    left:3px;
-    top:3px;
-    background:#90caf9;
-    border-radius:50%;
-    transition:0.3s;
-    box-shadow:0 0 8px rgba(144,202,249,0.6);
-}
-
-.theme-switch input:checked + .slider::before {
-    transform:translateX(18px);
-}
-
-.slider:hover {
-    transform: scale(1.05);
-}
-
-/* ==================== 12. DARK MODE OVERRIDES ==================== */
-/* =========================
-   DARK MODE/* =========================
-   DARK MODE
-========================= */
-body.dark .training-item {
-    background: linear-gradient(135deg, #1e293b, #111827);
-    border-left: 5px solid #60a5fa;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-}
-
-body.dark .training-name {
-    color: #e2e8f0;
-}
-
-body.dark .training-type {
-    color: #94a3b8;
-}
-
-body.dark {
-    background:#0f172a;
-    color:#e2e8f0;
-}
-
-body.dark .header {
-    background:#020617;
-}
-
-body.dark .info-bar {
-    background: linear-gradient(135deg, #0f172a, #020617);
-    color: #e2e8f0;
-    border: 1px solid rgba(255,255,255,0.1);
-}
-
-body.dark .slider {
-    background:rgba(255,255,255,0.1);
-}
-
-body.dark .card {
-    background: #1e1e1e;
-    border: 1px solid rgba(255,255,255,0.15);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.6);
-}
-
-body.dark .section-header {
-    border: 1px solid rgba(255,255,255,0.15);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.6);
-}
-
-body.dark .exec-header {
-    color: #90caf9;
-    background: linear-gradient(135deg, rgba(30,64,255,0.25), rgba(30,64,255,0.1));
-    border: 1px solid rgba(144,202,249,0.4);
-}
-
-body.dark .nonexec-header {
-    color: #ef9a9a;
-    background: linear-gradient(135deg, rgba(183,28,28,0.3), rgba(183,28,28,0.1));
-    border: 1px solid rgba(239,154,154,0.4);
-}
-
-body.dark .notice-alert {
-    color: #ffb4b4;
-
-    background: linear-gradient(135deg, #2a0f0f, #140707);
-
-    border: 1px solid rgba(255,138,128,0.25);
-
-    box-shadow: 
-        0 4px 14px rgba(0,0,0,0.6),
-        0 0 10px rgba(255,80,80,0.25),
-        0 0 20px rgba(255,50,50,0.18);
-}
-
-body.dark .notice-alert .alert-item {
-    color: #ffffff;
-}
-
-body.dark .shift-active-box::before {
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(207, 216, 220, 0.25) 60%,
-        #eceff1 100%
-    );
-}
-
-body.dark input,
-body.dark select {
-    background:#1f2933;
-    color:#e2e8f0;
-    border:1px solid #374151;
-}
-
-body.dark .footer {
-    color:#94a3b8;
-}
-
-body.dark #lastUpdated {
-    color: #94a3b8;
-}
-
-/* Keep shift colors intact */
-body.dark .chip {
-    opacity:0.95;
-}
-
-body.dark .badge {
-    box-shadow:0 0 6px rgba(255,255,255,0.1);
-}
-
-/* ==================== 13. PRODUCTION PLAN ==================== */
-/* =========================
-   PRODUCTION PLAN/* =========================
-   PRODUCTION PLAN
-   ========================= */
-
-.production-card{
-    margin-top:18px;
-    padding:16px 14px 14px;
-    margin-left:10px;
-    margin-right:10px;
-    background:#ffffff;
-    border-radius:14px;
-    box-shadow:0 3px 10px rgba(0,0,0,0.08);
-}
-
-/* Production heading */
-.production-card .section-title{
-    font-size:16px;
-    font-weight:700;
-    color:#1f2937;
-    margin-bottom:12px;
-}
-
-.production-card h3{
-    margin-bottom:10px;
-}
-
-/* Target capsules */
-.production-targets{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:8px;
-    flex-wrap:wrap;
-    margin:8px 0 16px;
-}
-
-.production-target{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    padding:6px 10px;
-    border-radius:20px;
-    font-size:11px;
-    font-weight:700;
-    white-space:nowrap;
-    box-shadow:0 3px 8px rgba(0,0,0,0.08);
-}
-
-.production-target.grade1 {
-    background: linear-gradient(135deg, #e8f1ff, #dbeafe);
-    color: #1e40af;
-    border: 1px solid #93baf8;
-}
-
-.production-target.grade2 {
-    background: linear-gradient(135deg, #f3e8ff, #e9d5ff);
-    color: #7e22ce;
-    border: 1px solid #c084fc;
-}
-
-.production-target.grade3 {
-    background: linear-gradient(135deg, #fff7ed, #fed7aa);
-    color: #c2410c;
-    border: 1px solid #fdba74;
-    padding: 5px 8px;
-    font-size: 10px;
-}
-
-/* Production schedule */
-.production-table{
-    width:100%;
-    border-collapse:separate;
-    border-spacing:0 9px;
-    font-size:13px;
-}
-
-.production-table th{
-    padding:3px 10px 5px;
-    text-align:left;
-    font-size:11px;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:.5px;
-    opacity:.55;
-}
-
-.production-table td{
-    padding:12px 10px;
-    background:linear-gradient(135deg,#ffffff,#f1f5f9);
-    border-top:1px solid rgba(128,128,128,.08);
-    border-bottom:1px solid rgba(128,128,128,.08);
-}
-
-.production-table td:first-child{
-    border-left:5px solid #1f4e79;
-    border-radius:10px 0 0 10px;
-    font-weight:700;
-}
-
-.production-table td:last-child{
-    border-radius:0 10px 10px 0;
-    font-weight:700;
-}
-
-.production-table th:nth-child(2),
-.production-table td:nth-child(2){
-    text-align:center;
-    width:55px;
-}
-
-.production-table th:nth-child(3),
-.production-table td:nth-child(3){
-    text-align:right;
-    width:90px;
-}
-
-
-/* Today's production */
-.production-today td{
-    background:linear-gradient(135deg,#ecfdf5,#d1fae5);
-    font-weight:700;
-}
-
-.production-today td:first-child{
-    border-left-color:#22c55e;
-}
-
-.production-past{
-    opacity:0.45;
-}
-
-body.dark .production-past{
-    opacity:0.4;
-}
-
-.production-empty{
-    padding:0;
-    margin-top:0;
-    font-size:14px;
-    font-weight:600;
-    color:#777;
-}
-
-
-/* Dark mode */
-body.dark .production-card{
-    background:#111827;
-    box-shadow:0 4px 12px rgba(0,0,0,.5);
-}
-
-body.dark .production-card .section-title{
-    color:#e2e8f0;
-}
-
-body.dark .production-table td{
-    background:linear-gradient(135deg,#1e293b,#111827);
-    border-color:rgba(255,255,255,.06);
-}
-
-body.dark .production-today td{
-    background:linear-gradient(135deg,#064e3b,#022c22);
-}
-
-.dark-mode .production-target.grade1 {
-    background: linear-gradient(135deg, #1e2d46, #263b5c);
-    color: #bfdbfe;
-    border: 1px solid #527db8;
-}
-
-.dark-mode .production-target.grade2 {
-    background: linear-gradient(135deg, #352044, #45265f);
-    color: #e9d5ff;
-    border: 1px solid #9b72c7;
-}
-
-.dark-mode .production-target.grade3 {
-    background: linear-gradient(135deg, #422b1b, #593820);
-    color: #fed7aa;
-    border: 1px solid #c17a3c;
-}
-
-/* Upcoming Production Plan */
-.production-table tbody tr:not(.production-today):not(.production-past) td:first-child{
-    border-left-color:#f59e0b;
-}
-
-body.dark .production-table tbody tr:not(.production-today):not(.production-past) td:first-child{
-    border-left-color:#fbbf24;
-}
-
-.production-duration{
-    font-size:14px;
-    font-weight:700;
-}
-
-.production-days{
-    text-align:center;
-    font-weight:700;
-}
-
-.production-grade{
-    text-align:right;
-    font-weight:700;
-}
-
-@media (max-width: 430px) {
-
-    .card,
-    .info-card {
-        padding: 14px 12px;
-    }
-
-    .card h3,
-    .production-card h3 {
-        font-size: 17px;
-        line-height: 1.3;
-    }
-
-    .production-targets {
-        gap: 6px;
-    }
-
-}
-
-/* Fix date selector overflow on iPhones */
-input[type="date"] {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-.field {
-    min-width: 0;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-
-/* ===== APP PAGE NAVIGATION ===== */
-
-.app-page {
-  display: none;
-}
-
-.app-page.active {
-  display: block;
-}
-
-/* Reserve space for the fixed bottom navigation */
-body {
-  padding-bottom: 90px;
-}
-
-/* Fixed bottom navigation bar */
-.bottom-nav {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 9999;
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  align-items: center;
-  gap: 2px;
-  padding: 8px 5px calc(8px + env(safe-area-inset-bottom));
-  background: var(--nav-bg, #ffffff);
-  border-top: 1px solid var(--nav-border, #dddddd);
-  box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.08);
-}
-
-.nav-item {
-  min-width: 0;
-  min-height: 52px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  border: 0;
-  border-radius: 10px;
-  background: transparent;
-  color: var(--nav-text, #666666);
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.nav-item svg {
-  width: 22px;
-  height: 22px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.nav-item.active {
-  color: var(--nav-active, #1565c0);
-  background: var(--nav-active-bg, #eaf2ff);
-}
-
-.nav-item:focus-visible {
-  outline: 2px solid var(--nav-active, #1565c0);
-  outline-offset: -2px;
-}
-
-/* More-page menu buttons */
-.more-menu {
-  display: grid;
-  gap: 12px;
-}
-
-.more-menu button {
-  width: 100%;
-  padding: 14px;
-  border: 1px solid #d7dce3;
-  border-radius: 12px;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-/* Dark theme */
-body.dark {
-  --nav-bg: #171a20;
-  --nav-border: #343943;
-  --nav-text: #c4c9d2;
-  --nav-active: #90baff;
-  --nav-active-bg: #26364e;
-}
-
-body.dark .more-menu button {
-  border-color: #414752;
-}
-
-/* Smaller phones */
-@media (max-width: 360px) {
-  .bottom-nav {
-    padding-left: 2px;
-    padding-right: 2px;
-    gap: 0;
-  }
-
-  .nav-item {
-    font-size: 10px;
-    gap: 3px;
-  }
-
-  .nav-item svg {
-    width: 20px;
-    height: 20px;
-  }
-}
-
-
-/* ===== IMS TARGETS PAGE ===== */
-
-.ims-card > h3 {
-  text-align: center;
-  margin-bottom: 14px;
-}
-
-.ims-section {
-  padding: 12px 0;
-  border-bottom: 1px solid var(--nav-border, #e0e0e0);
-}
-
-.ims-section:last-child {
-  border-bottom: none;
-}
-
-.ims-section-title {
-  margin: 0 0 8px;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.4;
-}
-
-.ims-values {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.ims-value {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.ims-value-label {
-  font-size: 10px;
-  color: var(--nav-text, #777);
-}
-
-.ims-value-number {
-  font-size: 12px;
-  font-weight: 600;
-  overflow-wrap: anywhere;
-}
-
-body.dark .ims-section {
-  border-color: #343943;
-}
-
-@media (max-width: 360px) {
-  .ims-values {
-    gap: 5px;
-  }
-
-  .ims-value-label {
-    font-size: 9px;
-  }
-
-  .ims-value-number {
-    font-size: 11px;
-  }
-}
-
-
-/* ===== IMS TARGETS: MODERN CARD DESIGN ===== */
-
-.ims-card {
-    background: transparent;
-    box-shadow: none;
-    padding: 0;
-}
-
-.ims-card > h3 {
-    margin: 8px 0 16px;
-    padding: 14px 12px;
-    border-radius: 12px;
-    text-align: center;
-    font-size: 17px;
-    font-weight: 700;
-    background: linear-gradient(135deg, #1f4e79, #2563a6);
-    color: #ffffff;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
-}
-
-.ims-section {
-    background: linear-gradient(135deg, #ffffff, #f1f5f9);
-    border-left: 5px solid #1f4e79;
-    border-radius: 10px;
-    padding: 13px 12px;
-    margin-bottom: 12px;
-    border-bottom: none;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.ims-section:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
-}
-
-.ims-section-title {
-    margin: 0 0 10px;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 1.45;
-    color: #1f4e79;
-}
-
-.ims-values {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-}
-
-.ims-value {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    padding: 8px 6px;
-    border-radius: 7px;
-    background: rgba(148, 163, 184, 0.10);
-}
-
-.ims-value-label {
-    font-size: 10px;
-    font-weight: 500;
-    color: #64748b;
-}
-
-.ims-value-number {
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 1.4;
-    color: #1e293b;
-    overflow-wrap: anywhere;
-}
-
-/* Dark mode */
-body.dark .ims-card > h3 {
-    background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
-}
-
-body.dark .ims-section {
-    background: linear-gradient(135deg, #1e293b, #111827);
-    border-left-color: #60a5fa;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-}
-
-body.dark .ims-section-title {
-    color: #93c5fd;
-}
-
-body.dark .ims-value {
-    background: rgba(148, 163, 184, 0.10);
-}
-
-body.dark .ims-value-label {
-    color: #94a3b8;
-}
-
-body.dark .ims-value-number {
-    color: #e2e8f0;
-}
-
-/* Compact mobile layout */
-@media (max-width: 360px) {
-    .ims-section {
-        padding: 11px 9px;
-    }
-
-    .ims-section-title {
-        font-size: 13px;
-    }
-
-    .ims-values {
-        gap: 5px;
-    }
-
-    .ims-value {
-        padding: 7px 4px;
-    }
-
-    .ims-value-label {
-        font-size: 9px;
-    }
-
-    .ims-value-number {
-        font-size: 11px;
-    }
-}
-
-
-/* ===== MATCHING PRODUCTION & TRAINING HEADERS ===== */
-
-#trainingHeader,
-#productionPlanHeader {
-    margin: 8px 0 16px;
-    padding: 14px 12px;
-    border-radius: 12px;
-    text-align: center;
-    font-size: 17px;
-    font-weight: 700;
-    line-height: 1.4;
-    background: linear-gradient(135deg, #1f4e79, #2563a6);
-    color: #ffffff;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
-}
-
-/* Keep the production month text consistent with the header */
-#productionPlanMonth {
-    color: #ffffff;
-    font-weight: 700;
-}
-
-/* Dark mode */
-body.dark #trainingHeader,
-body.dark #productionPlanHeader {
-    background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-}
-
-body.dark #productionPlanMonth {
-    color: #ffffff;
-}
-
-/* Smaller phones */
-@media (max-width: 360px) {
-    #trainingHeader,
-    #productionPlanHeader {
-        padding: 12px 9px;
-        font-size: 15px;
-    }
-}
-
+    html += `
+        </div>
+    `;
 
-/* ===== SIX-TAB BOTTOM NAVIGATION ===== */
-
-.bottom-nav {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 0;
-    padding-left: 3px;
-    padding-right: 3px;
-}
-
-.bottom-nav .nav-item {
-    min-height: 48px;
-    padding: 4px 1px;
-    gap: 3px;
-    font-size: 10px;
-    border-radius: 8px;
-}
-
-.bottom-nav .nav-item svg {
-    width: 20px;
-    height: 20px;
-}
-
-@media (max-width: 380px) {
-    .bottom-nav .nav-item {
-        font-size: 9px;
-    }
-
-    .bottom-nav .nav-item svg {
-        width: 18px;
-        height: 18px;
-    }
-}
-
-/* ===== SETTINGS / DISPLAY OPTIONS ===== */
-.settings-card > h3 {
-    margin: 4px 0 16px;
-    text-align: center;
-}
-
-.settings-card > label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.settings-card #displayMode {
-    margin-top: 0;
-}
-
-.settings-details {
-    margin-top: 18px;
-}
-
-.settings-details h4 {
-    margin: 0 0 8px;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.settings-details p {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 10px;
-    margin: 0;
-    padding: 6px 0;
-    font-size: 12px;
-    line-height: 1.4;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.settings-details p span:first-child {
-    flex-shrink: 0;
-    color: #6b7280;
-}
-
-.settings-details p span:last-child {
-    text-align: right;
-    overflow-wrap: anywhere;
-    font-weight: 400;
-}
-
-body.dark .settings-details p {
-    border-bottom-color: #343943;
-}
-
-body.dark .settings-details p span:first-child {
-    color: #9ca3af;
+    box.innerHTML = html;
 }
 
-/* Keep six tabs in one row on most mobile screens */
-@media (max-width: 380px) {
-    .bottom-nav .nav-item {
-        font-size: 8px;
-        gap: 2px;
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    .bottom-nav .nav-item svg {
-        width: 17px;
-        height: 17px;
-    }
-}
-
-/* Two rows only on exceptionally narrow screens */
-@media (max-width: 300px) {
-    .bottom-nav {
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    }
-}
-
-/* ===== SETTINGS HEADER — MATCH IMS DESIGN ===== */
-#settingsHeader {
-    margin: 8px 0 16px;
-    padding: 14px 12px;
-    border-radius: 12px;
-    text-align: center;
-    font-size: 17px;
-    font-weight: 700;
-    line-height: 1.4;
-    background: linear-gradient(135deg, #1f4e79, #2563a6);
-    color: #ffffff;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
-}
-
-body.dark #settingsHeader {
-    background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-}
-
-@media (max-width: 360px) {
-    #settingsHeader {
-        padding: 12px 9px;
-        font-size: 15px;
-    }
-}
