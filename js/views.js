@@ -163,6 +163,17 @@ function renderNext7Days(){
     }
 
     const today = new Date();
+
+    const heading = document.getElementById("shiftCalendarHeading");
+
+    if (heading) {
+        heading.textContent = "My Shift Schedule for " +
+            today.toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric"
+            });
+    }
+
     const year = today.getFullYear();
     const month = today.getMonth();
     const todayDate = today.getDate();
@@ -175,14 +186,7 @@ function renderNext7Days(){
 
     const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-    let html = `
-        <div class="calendar-month">
-            ${today.toLocaleDateString("en-US", {
-                month: "long",
-                year: "numeric"
-            })}
-        </div>
-
+        let html = `
         <div class="calendar-grid">
     `;
 
