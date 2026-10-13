@@ -453,3 +453,74 @@ if(alertsText !== undefined){
 
     });
 }
+
+
+/* ===== DASHBOARD PAGE NAVIGATION ===== */
+
+function navigateToPage(page, addHistory = true) {
+    const validPages = [
+        "home",
+        "shifts",
+        "production",
+        "training",
+        "more",
+        "ims",
+        "others"
+    ];
+
+    if (!validPages.includes(page)) {
+        return;
+    }
+
+    const targetPage = document.getElementById("page-" + page);
+
+    if (!targetPage) {
+        console.error("Dashboard page not found:", page);
+        return;
+    }
+
+    // Show the selected page and hide the others
+    document.querySelectorAll(".app-page").forEach(function (section) {
+        section.classList.toggle("active", section === targetPage);
+    });
+
+    // Highlight the selected bottom navigation tab
+    const activeTab = ["ims", "others"].includes(page) ? "more" : page;
+
+    document.querySelectorAll(".bottom-nav .nav-item").forEach(function (item) {
+        const isActive = item.dataset.page === activeTab;
+
+        item.classList.toggle("active", isActive);
+
+        if (isActive) {
+            item.setAttribute("aria-current", "page");
+        } else {
+            item.removeAttribute("aria-current");
+        }
+    });
+
+    // Keep the page name in browser history for Back-button handling
+    if (addHistory) {
+        history.pushState(
+            { dashboardPage: page },
+            "",
+            "#" + page
+        );
+    }
+
+    // Start each page at the top
+    window.scrollTo(0, 0);
+}
+
+// Android/browser Back button returns to Home
+window.addEventListener("popstate", function () {
+    navigateToPage("home", false);
+    history.replaceState({ dashboardPage: "home" }, "", "#home");
+});
+
+// Initialise navigation on first load
+document.addEventListener("DOMContentLoaded", function () {
+    navigateToPage("home", false);
+    history.replaceState({ dashboardPage: "home" }, "", "#home");
+});
+
