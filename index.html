@@ -174,19 +174,24 @@
   <div class="card">
     <h3>Others & Settings</h3>
 
-    <div id="themeToggle" class="theme-switch">
-      <input type="checkbox" id="toggleCheckbox">
-      <span class="slider"></span>
-    </div>
-    <label for="toggleCheckbox">Dark mode</label>
-
-    <p>Additional settings and developer details will be added here.</p>
-
-    <button type="button" onclick="navigateToPage('more')">
-      Back to More
-    </button>
-  </div>
+    
+<div id="themeToggle" class="theme-switch">
+  <input type="checkbox" id="toggleCheckbox">
+  <span class="slider"></span>
 </div>
+<label for="toggleCheckbox">Dark mode</label>
+
+<div class="settings-details">
+  <h4>App Information</h4>
+  <p><span>Application</span><strong>PPU Operations Dashboard</strong></p>
+  <p><span>Version</span><strong>2.0</strong></p>
+  <p><span>Developer</span><strong>Debajit Das</strong></p>
+  <p><span>Copyright</span><strong>© 2026</strong></p>
+</div>
+
+<button type="button" onclick="navigateToPage('more')">
+  Back to More
+</button>
 
 
 <nav class="bottom-nav" id="bottomNav" aria-label="Main navigation">
@@ -229,15 +234,25 @@
     <span>Training</span>
   </button>
 
-  <button type="button" class="nav-item" data-page="more"
-          onclick="navigateToPage('more')">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="5" cy="12" r="1"></circle>
-      <circle cx="12" cy="12" r="1"></circle>
-      <circle cx="19" cy="12" r="1"></circle>
-    </svg>
-    <span>More</span>
-  </button>
+  
+<button type="button" class="nav-item" data-page="ims"
+        onclick="navigateToPage('ims')">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="9"></circle>
+    <circle cx="12" cy="12" r="5"></circle>
+    <circle cx="12" cy="12" r="1"></circle>
+  </svg>
+  <span>IMS</span>
+</button>
+
+<button type="button" class="nav-item" data-page="others"
+        onclick="navigateToPage('others')">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="3"></circle>
+    <path d="m19.4 15 .1.1 1.4 1.1-1.5 2.6-1.7-.7a8 8 0 0 1-1.5.9l-.3 1.9h-3l-.3-1.9a8 8 0 0 1-1.5-.9l-1.7.7-1.5-2.6 1.4-1.1a8 8 0 0 1 0-1.8l-1.4-1.1 1.5-2.6 1.7.7a8 8 0 0 1 1.5-.9l.3-1.9h3l.3 1.9a8 8 0 0 1 1.5.9l1.7-.7 1.5 2.6-1.4 1.1a8 8 0 0 1 0 1.7Z" transform="translate(-1 -1) scale(1.05)"></path>
+  </svg>
+  <span>Settings</span>
+</button>
 
 </nav>
 
