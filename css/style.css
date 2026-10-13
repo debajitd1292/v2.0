@@ -1621,3 +1621,15 @@ body.dark #page-ims .ims-card > h3 {
     margin: 0 0 14px;
     border-radius: 10px;
 }
+
+
+/* Match IMS heading spacing in light mode */
+body:not(.dark) #page-ims .ims-card {
+    padding: 17px 12px 14px;
+}
+
+body:not(.dark) #page-ims .ims-card > h3 {
+    margin: 0 0 14px;
+    border-radius: 10px;
+}
+
