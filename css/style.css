@@ -1594,3 +1594,17 @@ body.dark #settingsHeader {
         font-size: 15px;
     }
 }
+
+
+/* Match section headers to HOD/AIC colours in dark mode */
+body.dark #page-production .production-card > h3,
+body.dark #page-training .card > h3,
+body.dark #page-ims .ims-card > h3,
+body.dark #page-others .settings-card > h3 {
+    background: linear-gradient(135deg, #0f172a, #020617);
+    color: #e2e8f0;
+    padding: 12px 14px;
+    margin: -14px -12px 14px;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
