@@ -1633,3 +1633,19 @@ body:not(.dark) #page-ims .ims-card > h3 {
     border-radius: 10px;
 }
 
+
+/* IMS outer card background in light mode */
+body:not(.dark) #page-ims .ims-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 17px 12px 14px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+/* Keep the IMS heading rounded on all four corners */
+body:not(.dark) #page-ims .ims-card > h3 {
+    border-radius: 10px;
+    margin: 0 0 14px;
+}
+
