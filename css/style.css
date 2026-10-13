@@ -504,7 +504,7 @@ body.dark .badge.N { background:#9ca3af; color:black; }
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 5px;
+    gap: 3px;
     width: 100%;
     box-sizing: border-box;
 }
@@ -523,14 +523,14 @@ body.dark .badge.N { background:#9ca3af; color:black; }
 
 .calendar-day {
     min-width: 0;
-    min-height: 57px;
+    min-height: 46px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    gap: 5px;
-    padding: 6px 1px;
+    gap: 2px;
+    padding: 3px 1px;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     background: #f8fafc;
@@ -548,8 +548,8 @@ body.dark .badge.N { background:#9ca3af; color:black; }
 }
 
 .calendar-shift .day-shift {
-    width: 27px;
-    height: 27px;
+    width: 23px;
+    height: 23px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -598,12 +598,12 @@ body.dark .calendar-today .calendar-date {
 /* Compact calendar on small screens */
 @media (max-width: 380px) {
     .calendar-grid {
-        gap: 3px;
+        gap: 2px;
     }
 
     .calendar-day {
-        min-height: 52px;
-        padding: 5px 0;
+        min-height: 42px;
+        padding: 3px 0;
         border-radius: 6px;
     }
 
@@ -616,8 +616,8 @@ body.dark .calendar-today .calendar-date {
     }
 
     .calendar-shift .day-shift {
-        width: 24px;
-        height: 24px;
+        width: 21px;
+        height: 21px;
         font-size: 9px;
     }
 }
