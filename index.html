@@ -171,27 +171,22 @@
 
 
 <div class="app-page" id="page-others">
-  <div class="card">
-    <h3>Others & Settings</h3>
+  <div class="card settings-card">
+    <h3>Display Option</h3>
 
-    
-<div id="themeToggle" class="theme-switch">
-  <input type="checkbox" id="toggleCheckbox">
-  <span class="slider"></span>
-</div>
-<label for="toggleCheckbox">Dark mode</label>
+    <label for="displayMode">Display Mode</label>
+    <select id="displayMode">
+      <option value="light">Light Mode</option>
+      <option value="dark">Dark Mode</option>
+    </select>
 
-<div class="settings-details">
-  <h4>App Information</h4>
-  <p><span>Application</span><strong>PPU Operations Dashboard</strong></p>
-  <p><span>Version</span><strong>2.0</strong></p>
-  <p><span>Developer</span><strong>Debajit Das</strong></p>
-  <p><span>Copyright</span><strong>© 2026</strong></p>
-</div>
-
-  <button type="button" onclick="navigateToPage('more')">
-    Back to More
-  </button>
+    <div class="settings-details">
+      <h4>App Information</h4>
+      <p><span>Application: </span><span>PPU Operations Dashboard</span></p>
+      <p><span>Version: </span><span>2.0</span></p>
+      <p><span>Developer: </span><span>Debajit Das</span></p>
+      <p><span>Copyright</span><span>© 2026</span></p>
+    </div>
   </div>
 </div>
 
@@ -257,10 +252,8 @@
 
 </nav>
 
-
 <div class="footer">
-    <div id="lastUpdated" style="margin-bottom:6px;"></div>
-    © 2026 • Developed by DebajitD
+    <div id="lastUpdated"></div>
 </div>
 
 <script src="js/config.js"></script>
