@@ -86,18 +86,20 @@
 </div>
 
 <div class="app-page" id="page-shifts">
-<div class="card"><h3 id="selectedTitle">Select Date & View Shift</h3> 
 
-    <label>Select Date:</label> 
-    <input type="date" id="datePicker" onchange="renderSelected()"> 
-    <div id="selected" style="margin-top:10px;"></div> 
-
-</div>
-
-<div class="card">
+  <!-- Upcoming Shifts: Next 7 Days -->
+  <div class="card">
     <h3>Upcoming Shifts (Next 7 Days)</h3>
     <div id="next7Days" class="next7-container"></div>
-</div>
+  </div>
+
+  <!-- Select Date & View Shift -->
+  <div class="card">
+    <h3 id="selectedTitle">Select Date & View Shift</h3>
+    <label>Select Date:</label>
+    <input type="date" id="datePicker" onchange="renderSelected()">
+    <div id="selected" style="margin-top:10px;"></div>
+  </div>
 
 </div>
 
