@@ -157,7 +157,7 @@ function renderNext7Days(){
     if(!selectedName){
 
         box.innerHTML =
-            "<div style='color:#777;'>Select name to view upcoming shifts</div>";
+            "<div style='color:#777;'>Select name to view shifts</div>";
 
         return;
     }
