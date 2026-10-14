@@ -1628,24 +1628,41 @@ body:not(.dark) #page-ims .ims-card > h3 {
 }
 
 /* Match Shift section headings with other dashboard sections */
+
+/* ===== SHIFT HEADINGS — MATCH OTHER DASHBOARD SECTIONS ===== */
+
 #page-shifts #shiftCalendarHeading,
 #page-shifts #selectedTitle {
-    background: linear-gradient(135deg, #0f172a, #020617);
-    color: #e2e8f0;
-    padding: 12px 14px;
-    margin: 0 0 14px;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, #1f4e79, #2563a6);
+    color: #ffffff;
+    padding: 14px 12px;
+    margin: 8px 0 16px;
+    border-radius: 12px;
+    border: none;
+    text-align: left;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
     box-sizing: border-box;
 }
 
-/* Light mode: retain the blue heading design */
-body:not(.dark) #page-shifts #shiftCalendarHeading,
-body:not(.dark) #page-shifts #selectedTitle {
-    background: linear-gradient(135deg, #1f4e79, #163a5f);
+/* Dark mode */
+body.dark #page-shifts #shiftCalendarHeading,
+body.dark #page-shifts #selectedTitle {
+    background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
     color: #ffffff;
-    border-color: rgba(31, 78, 121, 0.25);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
+
+@media (max-width: 360px) {
+    #page-shifts #shiftCalendarHeading,
+    #page-shifts #selectedTitle {
+        padding: 12px 9px;
+        font-size: 15px;
+    }
+}
+
 
 
 /* Left-align Production, Training, IMS and Settings headings */
