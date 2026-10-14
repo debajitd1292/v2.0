@@ -1881,3 +1881,34 @@ body.dark #next7Days .shift-active-box {
         inset 0 1px 0 rgba(255, 255, 255, 0.08),
         0 4px 16px rgba(0, 0, 0, 0.16);
 }
+
+
+/* Fix: Center and equally distribute bottom navigation on desktop */
+@media (min-width: 768px) {
+    .bottom-nav {
+        justify-content: center !important;
+    }
+
+    .bottom-nav .nav-scroll {
+        flex: 0 1 720px !important;
+        width: 100% !important;
+        max-width: 720px;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        justify-content: space-evenly !important;
+        overflow-x: hidden !important;
+    }
+
+    .bottom-nav .nav-scroll .nav-item {
+        flex: 1 1 0 !important;
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        justify-content: center !important;
+        text-align: center !important;
+    }
+
+    .bottom-nav .nav-arrow {
+        display: none !important;
+    }
+}
