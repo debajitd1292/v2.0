@@ -1648,12 +1648,15 @@ body:not(.dark) #page-ims .ims-card > h3 {
 }
 
 /* Dark mode */
+
 body.dark #page-shifts #shiftCalendarHeading,
 body.dark #page-shifts #selectedTitle {
-    background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    background: linear-gradient(135deg, #0f172a, #020617);
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: none;
 }
+
 
 @media (max-width: 360px) {
     #page-shifts #shiftCalendarHeading,
@@ -1796,5 +1799,37 @@ body.dark .nav-arrow {
         width: 21px;
         min-width: 21px;
         font-size: 24px;
+    }
+}
+
+
+/* ===== DESKTOP BOTTOM NAVIGATION ALIGNMENT ===== */
+
+@media (min-width: 768px) {
+    .bottom-nav {
+        justify-content: center;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .bottom-nav .nav-scroll {
+        flex: 0 1 720px;
+        width: 100%;
+        justify-content: space-evenly;
+        overflow-x: hidden;
+        margin: 0 auto;
+    }
+
+    .bottom-nav .nav-scroll .nav-item {
+        flex: 1 1 0;
+        width: auto;
+        min-width: 0;
+        max-width: none;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .bottom-nav .nav-arrow {
+        display: none;
     }
 }
