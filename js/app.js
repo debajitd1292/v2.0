@@ -501,6 +501,9 @@ function navigateToPage(page, addHistory = true) {
         }
     });
 
+    revealActiveNavItem();
+    updateNavArrows();
+
     if (addHistory) {
         history.pushState(
             { dashboardPage: page },
@@ -511,6 +514,82 @@ function navigateToPage(page, addHistory = true) {
 
     window.scrollTo(0, 0);
 }
+
+/* ===== HORIZONTAL BOTTOM NAVIGATION ===== */
+
+function updateNavArrows() {
+    const scroller = document.getElementById("navScroll");
+    const leftArrow = document.getElementById("navArrowLeft");
+    const rightArrow = document.getElementById("navArrowRight");
+
+    if (!scroller || !leftArrow || !rightArrow) return;
+
+    const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+    const canScroll = maxScroll > 2;
+
+    leftArrow.classList.toggle(
+        "is-visible",
+        canScroll && scroller.scrollLeft > 2
+    );
+
+    rightArrow.classList.toggle(
+        "is-visible",
+        canScroll && scroller.scrollLeft < maxScroll - 2
+    );
+}
+
+function revealActiveNavItem() {
+    const scroller = document.getElementById("navScroll");
+    const activeItem = document.querySelector(
+        "#navScroll .nav-item.active"
+    );
+
+    if (!scroller || !activeItem) return;
+
+    const itemLeft = activeItem.offsetLeft;
+    const itemRight = itemLeft + activeItem.offsetWidth;
+    const visibleLeft = scroller.scrollLeft;
+    const visibleRight = visibleLeft + scroller.clientWidth;
+
+    if (itemLeft < visibleLeft) {
+        scroller.scrollTo({
+            left: itemLeft,
+            behavior: "smooth"
+        });
+    } else if (itemRight > visibleRight) {
+        scroller.scrollTo({
+            left: itemRight - scroller.clientWidth,
+            behavior: "smooth"
+        });
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const scroller = document.getElementById("navScroll");
+    const leftArrow = document.getElementById("navArrowLeft");
+    const rightArrow = document.getElementById("navArrowRight");
+
+    if (!scroller || !leftArrow || !rightArrow) return;
+
+    leftArrow.addEventListener("click", function () {
+        scroller.scrollBy({
+            left: -Math.max(140, scroller.clientWidth * 0.7),
+            behavior: "smooth"
+        });
+    });
+
+    rightArrow.addEventListener("click", function () {
+        scroller.scrollBy({
+            left: Math.max(140, scroller.clientWidth * 0.7),
+            behavior: "smooth"
+        });
+    });
+
+    scroller.addEventListener("scroll", updateNavArrows);
+    window.addEventListener("resize", updateNavArrows);
+
+    updateNavArrows();
+});
 
 window.addEventListener("popstate", function () {
     navigateToPage("home", false);
