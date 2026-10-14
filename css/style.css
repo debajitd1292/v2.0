@@ -2,27 +2,29 @@
 ===============================================================================
 PPU OPERATIONS DASHBOARD — CSS INDEX
 ===============================================================================
-
-01. GLOBAL & BASE                  — body, h1
-02. HEADER & LOGO                  — .header, #todayDate, .logo, .badge
-03. HOD / AREA IN-CHARGE            — .info-bar, .info-row, .info-label, .info-name
-04. LAYOUT & FORM CONTROLS          — .row, .field, input, select
-05. ALERTS                          — #alertSection, .notice-alert, .alert-item
-06. EXECUTIVE / NON-EXEC HEADERS  — .section-header, .exec-header, .nonexec-header
-07. SHIFT DISPLAY & COLORS         — .card, .chip, .A, .B, .C, .G, .OFF, etc.
-08. FOOTER & LAST UPDATED           — .footer, #lastUpdated
-09. NEXT 7 DAYS                     — .next7-container, .day-card, .day-date, .day-shift
-10. TRAINING                        — .training-item, .training-name, .training-type
-11. THEME TOGGLE                    — .theme-switch, .slider
-12. DARK MODE OVERRIDES             — selectors beginning with body.dark
-13. PRODUCTION PLAN                 — .production-card, .production-target, .production-table
-14. RESPONSIVE DESIGN                — @media rules
-15. ANIMATIONS                       — @keyframes
-
+01. Global & base
+02. Header, logo & date
+03. HOD / Area in-charge
+04. Layout & form controls
+05. Alerts & animations
+06. Executive / non-executive headers
+07. Shift cards, chips & shift colours
+08. Footer & last-updated text
+09. Monthly shift calendar
+10. Training
+11. Theme toggle
+12. Dark-mode overrides
+13. Production plan
+14. App pages & general responsive rules
+15. IMS targets
+16. Training / Production / Settings / Shift headings
+17. Today's shift glass highlight
+18. Bottom navigation (single source of truth)
 ===============================================================================
 */
 
 /* ==================== 01. GLOBAL & BASE ==================== */
+
 body { 
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -1659,8 +1661,10 @@ body.dark #next7Days .shift-active-box {
 
 
 /* =============================================================================
-   16. BOTTOM NAVIGATION
-   Keep all six tabs evenly distributed and visible on mobile and desktop.
+   18. BOTTOM NAVIGATION — CONSOLIDATED
+   Mobile: swipe/scroll horizontally through fixed-width tabs.
+   Desktop: show all six tabs evenly across a centred navigation track.
+   Keep all bottom-navigation rules in this section only.
    ============================================================================= */
 
 .bottom-nav {
@@ -1672,9 +1676,8 @@ body.dark #next7Days .shift-active-box {
     display: flex;
     flex-wrap: nowrap;
     align-items: stretch;
-    justify-content: center;
     gap: 0;
-    padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+    padding: 6px 3px calc(6px + env(safe-area-inset-bottom));
     background: var(--nav-bg, #ffffff);
     border-top: 1px solid var(--nav-border, #dddddd);
     box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.08);
@@ -1682,26 +1685,35 @@ body.dark #next7Days .shift-active-box {
     overflow: hidden;
 }
 
+/* Scrollable row of navigation tabs */
 .bottom-nav .nav-scroll {
     display: flex;
-    flex: 1 1 100%;
-    width: 100%;
+    flex: 1 1 auto;
     min-width: 0;
-    max-width: 900px;
+    max-width: 100%;
     margin: 0 auto;
     align-items: stretch;
-    justify-content: space-evenly;
-    gap: 0;
-    overflow-x: hidden;
+    justify-content: flex-start;
+    gap: 2px;
+    overflow-x: auto;
     overflow-y: hidden;
     flex-wrap: nowrap;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
 }
 
-.bottom-nav .nav-item {
-    flex: 1 1 0;
-    width: auto;
-    min-width: 0;
-    max-width: none;
+.bottom-nav .nav-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+/* Fixed tab width makes horizontal scrolling possible on phones */
+.bottom-nav .nav-scroll .nav-item {
+    flex: 0 0 76px;
+    width: 76px;
+    min-width: 76px;
+    max-width: 76px;
     min-height: 48px;
     padding: 4px 1px;
     display: flex;
@@ -1724,7 +1736,7 @@ body.dark #next7Days .shift-active-box {
     -webkit-tap-highlight-color: transparent;
 }
 
-.bottom-nav .nav-item svg {
+.bottom-nav .nav-scroll .nav-item svg {
     display: block;
     flex: 0 0 auto;
     width: 20px;
@@ -1736,25 +1748,47 @@ body.dark #next7Days .shift-active-box {
     stroke-linejoin: round;
 }
 
-.bottom-nav .nav-item.active {
+.bottom-nav .nav-scroll .nav-item.active {
     color: var(--nav-active, #1565c0);
     background: var(--nav-active-bg, #eaf2ff);
 }
 
-.bottom-nav .nav-item:focus-visible {
+.bottom-nav .nav-scroll .nav-item:focus-visible {
     outline: 2px solid var(--nav-active, #1565c0);
     outline-offset: -2px;
 }
 
-/* Navigation arrows are unnecessary when all six tabs fit in the bar. */
+/* Navigation arrows: JavaScript adds .is-visible when scrolling is available */
 .bottom-nav .nav-arrow {
-    display: none !important;
+    display: flex;
+    flex: 0 0 24px;
+    width: 24px;
+    min-width: 24px;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 7px;
+    background: var(--nav-active-bg, #eaf2ff);
+    color: var(--nav-active, #1565c0);
+    font-size: 27px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
 }
 
-.nav-scroll::-webkit-scrollbar {
-    display: none;
+.bottom-nav .nav-arrow.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
+/* Dark theme navigation colours */
 body.dark {
     --nav-bg: #171a20;
     --nav-border: #343943;
@@ -1770,33 +1804,55 @@ body.dark {
         padding-right: 2px;
     }
 
-    .bottom-nav .nav-item {
+    .bottom-nav .nav-scroll .nav-item {
+        flex-basis: 70px;
+        width: 70px;
+        min-width: 70px;
+        max-width: 70px;
         font-size: 8px;
         gap: 2px;
         padding-left: 0;
         padding-right: 0;
     }
 
-    .bottom-nav .nav-item svg {
+    .bottom-nav .nav-scroll .nav-item svg {
         width: 17px;
         height: 17px;
     }
-}
 
-@media (max-width: 380px) {
-    .bottom-nav .nav-scroll .nav-item {
-        flex: 0 0 70px;
-        width: 70px;
-        min-width: 70px;
-        max-width: 70px;
-        font-size: 9px;
-    }
-
-    .nav-arrow {
-        display: flex;
+    .bottom-nav .nav-arrow {
         flex-basis: 21px;
         width: 21px;
         min-width: 21px;
         font-size: 24px;
+    }
+}
+
+/* Desktop: centre and distribute all six tabs; scrolling remains available if needed */
+@media (min-width: 768px) {
+    .bottom-nav {
+        justify-content: center;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .bottom-nav .nav-scroll {
+        flex: 0 1 900px;
+        width: 100%;
+        max-width: 900px;
+        justify-content: space-evenly;
+        overflow-x: auto;
+    }
+
+    .bottom-nav .nav-scroll .nav-item {
+        flex: 1 1 0;
+        width: auto;
+        min-width: 0;
+        max-width: none;
+        white-space: normal;
+    }
+
+    .bottom-nav .nav-arrow {
+        display: none;
     }
 }
