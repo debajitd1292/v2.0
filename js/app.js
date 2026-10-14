@@ -317,7 +317,8 @@ function autoRefreshData(){
         fetchCSV(nonExecUrlNext, true),
         fetchCSV(seniorityExecUrl, true),
         fetchCSV(seniorityNonExecUrl, true),
-        fetchCSV(alertsUrl, true)
+        fetchCSV(alertsUrl, true),
+        fetchCSV(imsUrl, true)
     ])
 
     .then(([
@@ -332,7 +333,8 @@ function autoRefreshData(){
         nonExecTextNext,
         seniorityExecText,
         seniorityNonExecText,
-        alertsText
+        alertsText,
+        imsText
     ]) => {
 
         updateHeaderDate();
@@ -388,6 +390,10 @@ if(alertsText !== undefined){
 
 
         loadNotesData(notesText);
+
+        if (imsText !== undefined && imsText !== null) {
+            loadIMSData(imsText);
+        }
 
         const nonExecCurrent = parseCSV(nonExecTextCurrent);
         const nonExecNext = parseCSV(nonExecTextNext);
