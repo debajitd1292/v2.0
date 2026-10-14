@@ -1782,3 +1782,21 @@ body.dark {
         height: 17px;
     }
 }
+
+@media (max-width: 380px) {
+    .bottom-nav .nav-scroll .nav-item {
+        flex: 0 0 70px;
+        width: 70px;
+        min-width: 70px;
+        max-width: 70px;
+        font-size: 9px;
+    }
+
+    .nav-arrow {
+        display: flex;
+        flex-basis: 21px;
+        width: 21px;
+        min-width: 21px;
+        font-size: 24px;
+    }
+}
