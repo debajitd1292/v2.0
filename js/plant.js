@@ -244,88 +244,92 @@ function majorCard(row, name) {
 
 
 
-function fpuCard(row, name) {
+
+function fpuCard(row, name, pairStatus = null) {
   row = row || {};
 
   const inlineDate = parseDate(row.last_taken_inline_date);
   const regenDate = parseDate(row.last_regeneration_date);
+  const customStatus = (row.custom_status || "").trim();
 
   let status = "Undetermined";
   let statusClass = "plant-fpu-unknown";
   let eventLabel = "";
   let eventDate = "";
 
-  const customStatus = (row.custom_status || "").trim();
-
-  if (
+  // Use pair-wise status when supplied; otherwise retain existing date logic.
+  if (pairStatus) {
+    status = pairStatus;
+  } else if (
     inlineDate &&
     regenDate &&
     inlineDate.getTime() !== regenDate.getTime()
   ) {
-    if (inlineDate > regenDate) {
-      status = "Inline";
-      statusClass = "plant-fpu-inline";
+    status = inlineDate > regenDate ? "Inline" : "Standby";
+  } else if (inlineDate && !regenDate) {
+    status = "Inline";
+  } else if (regenDate && !inlineDate) {
+    status = "Standby";
+  }
+
+  if (status === "Inline") {
+    statusClass = "plant-fpu-inline";
+    if (inlineDate) {
       eventLabel = "Last Taken Inline";
       eventDate = eventDateText(
         row.last_taken_inline_date,
         row.last_inline_shift
       );
-    } else {
-      status = "Standby";
-      statusClass = "plant-fpu-standby";
+    }
+  } else if (status === "Standby") {
+    statusClass = "plant-fpu-standby";
+
+    // Prefer regeneration date for Standby; fall back to inline date.
+    if (regenDate) {
+      eventLabel = "Last Regenerated";
+      eventDate = eventDateText(
+        row.last_regeneration_date,
+        row.last_regeneration_shift
+      );
+    } else if (inlineDate) {
+      eventLabel = "Last Taken Inline";
+      eventDate = eventDateText(
+        row.last_taken_inline_date,
+        row.last_inline_shift
+      );
+    }
+  }
+
+  // If no pair status was determined, still show any available event date.
+  if (!eventDate && !pairStatus) {
+    if (inlineDate && !regenDate) {
+      eventLabel = "Last Taken Inline";
+      eventDate = eventDateText(
+        row.last_taken_inline_date,
+        row.last_inline_shift
+      );
+    } else if (regenDate && !inlineDate) {
       eventLabel = "Last Regenerated";
       eventDate = eventDateText(
         row.last_regeneration_date,
         row.last_regeneration_shift
       );
     }
-  
-  } else if (inlineDate && !regenDate) {
-    status = "Inline";
-    statusClass = "plant-fpu-inline";
-    eventLabel = "Last Taken Inline";
-    eventDate = eventDateText(
-      row.last_taken_inline_date,
-      row.last_inline_shift
-    );
-  } else if (regenDate && !inlineDate) {
-    status = "Standby";
-    statusClass = "plant-fpu-standby";
-    eventLabel = "Last Regenerated";
-    eventDate = eventDateText(
-      row.last_regeneration_date,
-      row.last_regeneration_shift
-    );
   }
 
-
-  
-  if (customStatus) {
-    status = customStatus;
-  }
-
-
-  const daysInline = inlineDate
-    ? daysBetween(inlineDate)
-    : null;
+  const daysInline = inlineDate ? daysBetween(inlineDate) : null;
 
   return `
     <article class="plant-fpu-card ${statusClass}">
       <div class="plant-card-title">${escapeHTML(name)}</div>
-      
-      
-      <div class="plant-status-text">${
-        customStatus
-          ? ""
-          : escapeHTML(status)
-      }</div>
-      ${
-        customStatus
-          ? `<div class="plant-custom-message">${escapeHTML(customStatus)}</div>`
-          : ""
-      }
-
-
+      <div class="plant-status-text">
+        <span>${escapeHTML(status)}</span>
+        ${
+          customStatus
+            ? `<span class="plant-custom-message"> (${escapeHTML(customStatus)})</span>`
+            : ""
+        }
+      </div>
       ${
         eventDate
           ? `<div class="plant-event-date"><span class="plant-date-label">${escapeHTML(eventLabel)}:</span> ${escapeHTML(eventDate)}</div>`
@@ -341,6 +345,7 @@ function fpuCard(row, name) {
 }
 
 
+
   function render(rows) {
     const majorContainer = $("plantMajorCards");
     const fpuContainer = $("plantFpuCards");
@@ -354,18 +359,35 @@ function fpuCard(row, name) {
       majorCard(getRow(rows, "major", "Extruder"), "Extruder")
     ].join("");
 
-    const fpuNames = [
-      "Dryer-A",
-      "Dryer-B",
-      "Treater-A",
-      "Treater-B",
-      "RG Filter-A",
-      "RG Filter-B"
+    
+    const fpuPairs = [
+      ["Dryer-A", "Dryer-B"],
+      ["Treater-A", "Treater-B"],
+      ["RG Filter-A", "RG Filter-B"]
     ];
 
-    fpuContainer.innerHTML = fpuNames
-      .map((name) => fpuCard(getRow(rows, "fpu", name), name))
-      .join("");
+    const fpuCards = [];
+
+    fpuPairs.forEach(([nameA, nameB]) => {
+      const rowA = getRow(rows, "fpu", nameA) || {};
+      const rowB = getRow(rows, "fpu", nameB) || {};
+
+      const dateA = parseDate(rowA.last_taken_inline_date);
+      const dateB = parseDate(rowB.last_taken_inline_date);
+
+      let statusA = null;
+      let statusB = null;
+
+      if (dateA && dateB && dateA.getTime() !== dateB.getTime()) {
+        statusA = dateA > dateB ? "Inline" : "Standby";
+        statusB = dateB > dateA ? "Inline" : "Standby";
+      }
+
+      fpuCards.push(fpuCard(rowA, nameA, statusA));
+      fpuCards.push(fpuCard(rowB, nameB, statusB));
+    });
+
+    fpuContainer.innerHTML = fpuCards.join("");
 
     setNote("");
   }
