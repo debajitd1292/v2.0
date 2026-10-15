@@ -2217,3 +2217,16 @@ body.dark #page-plant .plant-fpu-card.plant-fpu-inline {
     font-size: 10px;
   }
 }
+
+
+#page-plant .plant-custom-message {
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 500;
+  color: #2878c8;
+  overflow-wrap: anywhere;
+}
+
+body.dark #page-plant .plant-custom-message {
+  color: #60a5fa;
+}
