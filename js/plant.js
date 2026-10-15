@@ -286,7 +286,9 @@ function fpuCard(row, name, pairStatus = null) {
 
     // Prefer regeneration date for Standby; fall back to inline date.
     if (regenDate) {
-      eventLabel = "Last Regenerated";
+      eventLabel = name.startsWith("RG Filter")
+      ? "Last Cleaned"
+      : "Last Regenerated";
       eventDate = eventDateText(
         row.last_regeneration_date,
         row.last_regeneration_shift
@@ -309,7 +311,9 @@ function fpuCard(row, name, pairStatus = null) {
         row.last_inline_shift
       );
     } else if (regenDate && !inlineDate) {
-      eventLabel = "Last Regenerated";
+      eventLabel = name.startsWith("RG Filter")
+      ? "Last Cleaned"
+      : "Last Regenerated";
       eventDate = eventDateText(
         row.last_regeneration_date,
         row.last_regeneration_shift
@@ -317,7 +321,10 @@ function fpuCard(row, name, pairStatus = null) {
     }
   }
 
-  const daysInline = inlineDate ? daysBetween(inlineDate) : null;
+  const daysInline =
+  status === "Inline" && inlineDate
+    ? daysBetween(inlineDate)
+    : null;
 
   return `
     <article class="plant-fpu-card ${statusClass}">
