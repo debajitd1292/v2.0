@@ -1,7 +1,8 @@
 (function () {
   "use strict";
 
-  const CSV_URL = plantStatusUrl;
+  const CSV_URL =
+      "https://raw.githubusercontent.com/debajitd1292/v2.0/main/updates/plant_status.csv";
 
   const REFRESH_INTERVAL = 2 * 60 * 1000;
 
@@ -397,7 +398,7 @@ function fpuCard(row, name, pairStatus = null) {
 
     try {
       const url =
-        CSV_URL + "&refresh=" + Date.now() + "-" + Math.random().toString(36).slice(2);
+        CSV_URL + "?v=" + Date.now() + "-" + Math.random().toString(36).slice(2);
 
       const response = await fetch(url, {
         method: "GET",
