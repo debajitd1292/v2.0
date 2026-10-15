@@ -279,19 +279,25 @@ function fpuCard(row, name) {
         row.last_regeneration_shift
       );
     }
+  
   } else if (inlineDate && !regenDate) {
+    status = "Inline";
+    statusClass = "plant-fpu-inline";
     eventLabel = "Last Taken Inline";
     eventDate = eventDateText(
       row.last_taken_inline_date,
       row.last_inline_shift
     );
   } else if (regenDate && !inlineDate) {
+    status = "Standby";
+    statusClass = "plant-fpu-standby";
     eventLabel = "Last Regenerated";
     eventDate = eventDateText(
       row.last_regeneration_date,
       row.last_regeneration_shift
     );
   }
+
 
   if (customStatus) {
     status = customStatus;
