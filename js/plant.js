@@ -1,11 +1,3 @@
-
-/* =========================================================
-   PLANT STATUS MODULE
-   File: js/plant.js
-   CSV: updates/plant_status.csv
-   Refresh: Every 2 minutes + when tab becomes visible
-   ========================================================= */
-
 (function () {
   "use strict";
 
@@ -406,10 +398,15 @@ function fpuCard(row, name, pairStatus = null) {
 
     try {
       const url =
-        CSV_URL + "?v=" + Date.now();
+        CSV_URL + "?v=" + Date.now() + "-" + Math.random().toString(36).slice(2);
 
       const response = await fetch(url, {
-        cache: "no-store"
+        method: "GET",
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache",
+          "Pragma": "no-cache"
+        }
       });
 
       if (!response.ok) {
@@ -467,5 +464,24 @@ function fpuCard(row, name, pairStatus = null) {
   } else {
     startPlantStatus();
   }
+
+// Refresh when the Plant page becomes active.
+const plantPage = document.getElementById("page-plant");
+
+if (plantPage) {
+  const plantObserver = new MutationObserver(() => {
+    if (
+      plantPage.classList.contains("active") ||
+      plantPage.classList.contains("active-page")
+    ) {
+      refreshPlantStatus();
+    }
+  });
+
+  plantObserver.observe(plantPage, {
+    attributes: true,
+    attributeFilter: ["class"]
+  });
+}
 
 })();
