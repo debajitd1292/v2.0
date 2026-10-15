@@ -11,7 +11,6 @@ const notesUrl =
 const alertsUrl =
     baseUrl + "updates/alerts.csv?v=" + DATA_VERSION;
 
-
 const trainingUrl =
     baseUrl + "updates/training.csv?v=" + DATA_VERSION;
 
