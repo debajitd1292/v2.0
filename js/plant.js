@@ -299,10 +299,11 @@ function fpuCard(row, name) {
   }
 
 
+  
   if (customStatus) {
     status = customStatus;
-    statusClass = "plant-fpu-custom";
   }
+
 
   const daysInline = inlineDate
     ? daysBetween(inlineDate)
@@ -311,7 +312,14 @@ function fpuCard(row, name) {
   return `
     <article class="plant-fpu-card ${statusClass}">
       <div class="plant-card-title">${escapeHTML(name)}</div>
+      
       <div class="plant-status-text">${escapeHTML(status)}</div>
+      ${
+        customStatus
+          ? `<div class="plant-custom-message">${escapeHTML(customStatus)}</div>`
+          : ""
+      }
+
       ${
         eventDate
           ? `<div class="plant-event-date"><span class="plant-date-label">${escapeHTML(eventLabel)}:</span> ${escapeHTML(eventDate)}</div>`
