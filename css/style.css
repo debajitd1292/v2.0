@@ -1863,204 +1863,250 @@ body.dark {
 }
 
 
-/* =============================================================================
-   PLANT PAGE — MAJOR EQUIPMENT STATUS
-   ============================================================================= */
 
-#page-plant .plant-page-card {
-    margin: 10px;
-    padding: 16px 12px 14px;
-    background: #fff;
-    border-radius: 14px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+/* =====================================================
+   PLANT PAGE — CONSOLIDATED MODERN LAYOUT
+   ===================================================== */
+
+#page-plant {
+  padding-bottom: 20px;
 }
 
+/* Page heading: retain the existing Training/IMS-style header */
 #page-plant #plantHeader {
-    background: linear-gradient(135deg, #1f4e79, #2563a6);
-    color: #fff;
-    padding: 14px 12px;
-    margin: 0 0 14px;
-    border-radius: 10px;
-    text-align: left;
-    font-size: 17px;
-    font-weight: 700;
-    line-height: 1.4;
-    box-sizing: border-box;
-}
-
-body.dark #page-plant .plant-page-card {
-    background: #171a20;
-    color: #e2e8f0;
+  background: linear-gradient(135deg, #1f4e79, #2563a6);
+  color: #fff;
+  padding: 14px 12px;
+  margin: 0 0 14px;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+  box-sizing: border-box;
 }
 
 body.dark #page-plant #plantHeader {
-    background: linear-gradient(135deg, #0f172a, #020617);
-    color: #e2e8f0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: none;
+  background: linear-gradient(135deg, #0f172a, #020617);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: none;
 }
 
-/* Two major-equipment cards */
-#page-plant .plant-major-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    margin-bottom: 12px;
+/* Reactor and Extruder: one large card per row */
+#page-plant #plantMajorCards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  width: 100%;
+  margin: 14px 0 20px;
 }
 
-/* Six FPU cards: two columns, three rows on all device sizes */
-#page-plant .plant-fpu-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-}
-
-#page-plant .plant-equipment-card {
-    min-width: 0;
-    box-sizing: border-box;
-    padding: 11px 10px;
-    border: 1px solid #e2e8f0;
-    border-radius: 11px;
-    background: #f8fafc;
-    color: #1f2937;
-    overflow-wrap: anywhere;
-}
-
-body.dark #page-plant .plant-equipment-card {
-    background: #202630;
-    border-color: #3b4350;
-    color: #e2e8f0;
-}
-
-/* Major equipment uses status-specific left edges */
 #page-plant .plant-major-card {
-    border-left: 4px solid #9ca3af;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 19px 20px;
+  border: 1px solid #e2e8f0;
+  border-left: 5px solid #94a3b8;
+  border-radius: 15px;
+  background: #fff;
+  color: #1e293b;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.055);
+  overflow-wrap: anywhere;
 }
 
 #page-plant .plant-major-card.plant-running {
-    border-left-color: #279653;
+  border-left-color: #16a34a;
 }
 
 #page-plant .plant-major-card.plant-shutdown {
-    border-left-color: #d64545;
+  border-left-color: #dc2626;
 }
 
-/* FPU cards retain one common card colour */
+#page-plant .plant-major-card.plant-unknown {
+  border-left-color: #94a3b8;
+}
+
+/* Equipment names */
+#page-plant .plant-card-title {
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 750;
+  color: #1e293b;
+}
+
+/* Status text */
+#page-plant .plant-status-text {
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+#page-plant .plant-major-card.plant-running .plant-status-text,
+#page-plant .plant-fpu-card.plant-fpu-inline .plant-status-text {
+  color: #15803d;
+}
+
+#page-plant .plant-major-card.plant-shutdown .plant-status-text {
+  color: #dc2626;
+}
+
+#page-plant .plant-major-card.plant-unknown .plant-status-text,
+#page-plant .plant-fpu-card.plant-fpu-unknown .plant-status-text {
+  color: #64748b;
+}
+
+/* Event dates and duration */
+#page-plant .plant-event-date {
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 500;
+  color: #64748b;
+  overflow-wrap: anywhere;
+}
+
+#page-plant .plant-duration {
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 650;
+  color: #334155;
+  overflow-wrap: anywhere;
+}
+
+/* FPU: two columns, six cards, three rows */
+#page-plant #plantFpuCards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  margin: 12px 0 18px;
+  align-items: stretch;
+}
+
+/* Compact, neutral FPU cards */
 #page-plant .plant-fpu-card {
-    border-left: 3px solid #94a3b8;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+  min-height: 112px;
+  box-sizing: border-box;
+  padding: 13px 12px;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #cbd5e1;
+  border-radius: 13px;
+  background: #f8fafc;
+  color: #1e293b;
+  box-shadow: 0 2px 9px rgba(15, 23, 42, 0.045);
+  overflow-wrap: anywhere;
 }
 
-#page-plant .plant-card-top {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 5px;
+/* Keep all FPU cards neutral */
+#page-plant .plant-fpu-card.plant-fpu-inline,
+#page-plant .plant-fpu-card.plant-fpu-standby,
+#page-plant .plant-fpu-card.plant-fpu-custom,
+#page-plant .plant-fpu-card.plant-fpu-unknown {
+  border-left-color: #cbd5e1;
 }
 
-#page-plant .plant-equipment-card h3 {
-    margin: 0 0 7px;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 1.3;
+#page-plant .plant-fpu-card .plant-card-title {
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 750;
 }
 
-#page-plant .plant-card-top h3 {
-    margin-bottom: 0;
+#page-plant .plant-fpu-card .plant-status-text {
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 750;
 }
 
-#page-plant .plant-status {
-    margin: 5px 0 8px;
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 1.3;
+#page-plant .plant-fpu-card.plant-fpu-inline .plant-status-text {
+  color: #15803d;
 }
 
-#page-plant .plant-status-running,
-#page-plant .plant-status-inline {
-    color: #279653;
+#page-plant .plant-fpu-card.plant-fpu-standby .plant-status-text {
+  color: #c2410c;
 }
 
-#page-plant .plant-status-shutdown {
-    color: #d64545;
+#page-plant .plant-fpu-card.plant-fpu-custom .plant-status-text {
+  color: #2563eb;
 }
 
-#page-plant .plant-status-standby {
-    color: #d97706;
+#page-plant .plant-fpu-card .plant-event-date,
+#page-plant .plant-fpu-card .plant-duration {
+  font-size: 11px;
+  line-height: 1.45;
+  font-weight: 500;
 }
 
-#page-plant .plant-status-custom {
-    color: #2878c8;
+/* Data refresh message */
+#page-plant #plantDataNote {
+  margin: 8px 2px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #64748b;
 }
 
-#page-plant .plant-status-unknown {
-    color: #6b7280;
+/* Dark mode */
+body.dark #page-plant .plant-major-card,
+body.dark #page-plant .plant-fpu-card {
+  background: #171a20;
+  color: #e2e8f0;
+  border-top-color: #3b4350;
+  border-right-color: #3b4350;
+  border-bottom-color: #3b4350;
 }
 
-body.dark #page-plant .plant-status-unknown {
-    color: #c0c7d2;
+body.dark #page-plant .plant-card-title {
+  color: #e2e8f0;
 }
 
-#page-plant .plant-detail-label {
-    margin-top: 6px;
-    color: #64748b;
-    font-size: 11px;
-    font-weight: 500;
-    line-height: 1.35;
+body.dark #page-plant .plant-event-date,
+body.dark #page-plant #plantDataNote {
+  color: #aab4c3;
 }
 
-body.dark #page-plant .plant-detail-label {
-    color: #aab4c3;
+body.dark #page-plant .plant-duration {
+  color: #cbd5e1;
 }
 
-/* Dates and duration intentionally remain compact */
-#page-plant .plant-date-value,
-#page-plant .plant-duration-value {
-    margin-top: 2px;
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 1.4;
-    font-variant-numeric: tabular-nums;
+body.dark #page-plant .plant-major-card.plant-running {
+  border-left-color: #16a34a;
 }
 
-#page-plant .plant-duration-label {
-    margin-top: 8px;
+body.dark #page-plant .plant-major-card.plant-shutdown {
+  border-left-color: #dc2626;
 }
 
-#page-plant .plant-data-note {
-    margin-top: 10px;
-    color: #64748b;
-    font-size: 11px;
-}
-
-body.dark #page-plant .plant-data-note {
-    color: #aab4c3;
-}
-
+/* Small mobile screens: retain two FPU columns */
 @media (max-width: 360px) {
-    #page-plant .plant-page-card {
-        padding: 12px 8px;
-    }
+  #page-plant #plantFpuCards {
+    gap: 7px;
+  }
 
-    #page-plant .plant-major-grid,
-    #page-plant .plant-fpu-grid {
-        gap: 6px;
-    }
+  #page-plant .plant-fpu-card {
+    padding: 11px 9px;
+    min-height: 108px;
+  }
 
-    #page-plant .plant-equipment-card {
-        padding: 9px 7px;
-    }
+  #page-plant .plant-fpu-card .plant-card-title {
+    font-size: 12px;
+  }
 
-    #page-plant .plant-equipment-card h3 {
-        font-size: 12px;
-    }
+  #page-plant .plant-fpu-card .plant-event-date,
+  #page-plant .plant-fpu-card .plant-duration {
+    font-size: 10px;
+  }
 
-    #page-plant .plant-date-value,
-    #page-plant .plant-duration-value {
-        font-size: 11px;
-    }
-
-    #page-plant .plant-status {
-        font-size: 11px;
-    }
+  #page-plant .plant-major-card {
+    padding: 16px;
+  }
 }
