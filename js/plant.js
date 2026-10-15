@@ -424,7 +424,8 @@ function fpuCard(row, name, pairStatus = null) {
       render(lastGoodRows);
 
     } catch (error) {
-      console.warn("Plant status refresh failed:", error);
+      console.error("Plant status refresh failed:", error);
+      setNote("Plant error: " + error.message);
 
       if (lastGoodRows.length) {
         render(lastGoodRows);
