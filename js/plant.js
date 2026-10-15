@@ -313,12 +313,18 @@ function fpuCard(row, name) {
     <article class="plant-fpu-card ${statusClass}">
       <div class="plant-card-title">${escapeHTML(name)}</div>
       
-      <div class="plant-status-text">${escapeHTML(status)}</div>
+      
+      <div class="plant-status-text">${
+        customStatus
+          ? ""
+          : escapeHTML(status)
+      }</div>
       ${
         customStatus
           ? `<div class="plant-custom-message">${escapeHTML(customStatus)}</div>`
           : ""
       }
+
 
       ${
         eventDate
