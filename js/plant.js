@@ -423,17 +423,16 @@ function fpuCard(row, name, pairStatus = null) {
       lastGoodRows = rows;
       render(lastGoodRows);
 
-    } catch (error) {
-      console.error("Plant status refresh failed:", error);
-      setNote("Plant error: " + error.message);
+    
+} catch (error) {
+  console.error("Plant status refresh failed:", error);
 
-      if (lastGoodRows.length) {
-        render(lastGoodRows);
-        setNote("Unable to refresh plant status. Showing last available data.");
-      } else {
-        setNote("Plant status data could not be loaded. Check the CSV file.");
-      }
-    } finally {
+  setNote(
+    "Plant error: " +
+    (error.message || String(error))
+  );
+}
+ finally {
       isRefreshing = false;
     }
   }
